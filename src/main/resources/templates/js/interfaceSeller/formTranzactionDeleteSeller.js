@@ -10,7 +10,7 @@ $(document).ready(function (){
         "        </form>" +
         "</div>");
     $.ajax({
-        url: "http://localhost:8100/seller/getTableSorts",
+        url: "http://vsenaydetsia.ml/seller/getTableSorts",
         type: 'post',
         dataType: "json",
         success: function (data) {

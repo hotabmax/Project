@@ -9,7 +9,7 @@ $(document).ready(function (){
         "        </form>" +
         "</div>");
     $.ajax({
-        url: "http://localhost:8100/logist/getTableSorts",
+        url: "http://vsenaydetsia.ml/logist/getTableSorts",
         type: 'post',
         dataType: "json",
         success: function (data) {
@@ -32,7 +32,7 @@ function eventMouseOutButtonTranzactionAdd(){
 
 function selectProductsForTransactionAdd() {
     $.ajax({
-        url: "http://localhost:8100/logist/getTableProductsBySort",
+        url: "http://vsenaydetsia.ml/logist/getTableProductsBySort",
         type: 'post',
         data: $('#formTranzactionAddProduct').serialize(),
         dataType: "json",
@@ -52,7 +52,7 @@ function selectProductsForTransactionAdd() {
 }
 
 function clickTranzactionAddProduct(){
-        $.ajax("http://localhost:8100/logist/tranzactionAddProductAmount", {
+        $.ajax("http://vsenaydetsia.ml/logist/tranzactionAddProductAmount", {
             type: 'post',
             data: $('#formTranzactionAddProduct').serialize(),
             dataType: "json",

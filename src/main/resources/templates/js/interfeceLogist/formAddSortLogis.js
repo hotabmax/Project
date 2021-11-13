@@ -17,13 +17,13 @@ function eventMouseOutButtonAddSort(){
 }
 
 function clickCreateSort(){
-    $.ajax("http://localhost:8100/logist/createSort",{
+    $.ajax("http://vsenaydetsia.ml/logist/createSort",{
         type: 'post',
         data: $('#formCreateSort').serialize(),
     })
     setTimeout(function (){
         $.ajax({
-            url: "http://localhost:8100/logist/getTableSorts",
+            url: "http://vsenaydetsia.ml/logist/getTableSorts",
             type: 'post',
             dataType: "json",
             success: function (data) {

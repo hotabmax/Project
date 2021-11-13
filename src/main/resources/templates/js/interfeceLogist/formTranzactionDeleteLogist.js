@@ -9,7 +9,7 @@ $(document).ready(function (){
         "<p id='warning' style='font-size: 16pt'></p>" +
         "        </form>" +
         "</div>");
-    $.ajax( "http://localhost:8100/logist/getTableSorts",{
+    $.ajax( "http://vsenaydetsia.ml/logist/getTableSorts",{
         type: 'post',
         dataType: "json",
         success: function (data) {
@@ -31,7 +31,7 @@ function eventMouseOutButtonTranzactionDelete(){
 }
 
 function selectProductsForTransactionDelete() {
-    $.ajax( "http://localhost:8100/logist/getTableProductsBySort",{
+    $.ajax( "http://vsenaydetsia.ml/logist/getTableProductsBySort",{
         type: 'post',
         data: $('#formTranzactionDeleteProduct').serialize(),
         dataType: "json",
@@ -52,7 +52,7 @@ function selectProductsForTransactionDelete() {
 
 
 function clickTranzactionDeleteProduct(){
-        $.ajax("http://localhost:8100/logist/getTableProducts", {
+        $.ajax("http://vsenaydetsia.ml/logist/getTableProducts", {
             type: 'post',
             data: $('#formTranzactionDeleteProduct').serialize(),
             dataType: "json",

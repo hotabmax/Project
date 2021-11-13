@@ -8,7 +8,7 @@ $(document).ready(function (){
         "</div>")
 
     $.ajax({
-        url: "http://localhost:8100/logist/getTableSorts",
+        url: "http://vsenaydetsia.ml/logist/getTableSorts",
         type: 'post',
         dataType: "json",
         success: function (data) {
@@ -31,14 +31,14 @@ function eventMouseOutButtonDeleteSort(){
 }
 
 function clickDeleteSort(){
-    $.ajax("http://localhost:8100/logist/deleteSort",{
+    $.ajax("http://vsenaydetsia.ml/logist/deleteSort",{
         type: 'post',
         data: $('#formDeleteSort').serialize(),
     })
 
     setTimeout(function (){
         $.ajax({
-            url: "http://localhost:8100/logist/getTableSorts",
+            url: "http://vsenaydetsia.ml/logist/getTableSorts",
             type: 'post',
             dataType: "json",
             success: function (data) {

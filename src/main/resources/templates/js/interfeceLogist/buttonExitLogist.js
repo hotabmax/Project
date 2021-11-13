@@ -5,7 +5,7 @@ $(document).ready(function (){
 })
 function clickExit(){
     $.ajax({
-        url: "http://localhost:8100/exit",
+        url: "http://vsenaydetsia.ml/exit",
         type: 'get',
         success: function (){
             location.reload()

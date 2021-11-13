@@ -8,7 +8,7 @@ $(document).ready(function (){
         "        </form>" +
         "</div>");
     $.ajax({
-        url: "http://localhost:8100/logist/getTableSorts",
+        url: "http://vsenaydetsia.ml/logist/getTableSorts",
         type: 'post',
         dataType: "json",
         success: function (data) {
@@ -31,7 +31,7 @@ function eventMouseOutButtonDeleteProduct(){
 
 function selectProductsForDelete() {
     $.ajax({
-        url: "http://localhost:8100/logist/getTableProductsBySort",
+        url: "http://vsenaydetsia.ml/logist/getTableProductsBySort",
         type: 'post',
         data: $('#formDeleteProduct').serialize(),
         dataType: "json",
@@ -50,7 +50,7 @@ function selectProductsForDelete() {
     })
 }
 function clickDeleteProduct() {
-    $.ajax("http://localhost:8100/logist/deleteProduct", {
+    $.ajax("http://vsenaydetsia.ml/logist/deleteProduct", {
         type: 'post',
         data: $('#formDeleteProduct').serialize(),
         dataType: "json",
