@@ -1,0 +1,245 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Max
+      changes:
+        - createTable:
+            tableName: userdata
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar
+              - column:
+                  name: password
+                  type: varchar
+              - column:
+                  name: role
+                  type: varchar
+        - createTable:
+            tableName: sort
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar
+              - column:
+                  name: password
+                  type: varchar
+              - column:
+                  name: role
+                  type: varchar
+        - createTable:
+            tableName: product
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar
+              - column:
+                  name: amount
+                  type: varchar
+              - column:
+                  name: description
+                  type: varchar
+              - column:
+                  name: sortid
+                  type: serial
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: userdata
+            columnNames: name
+        - addUniqueConstraint:
+            tableName: product
+            columnNames: name
+        - addUniqueConstraint:
+            tableName: sort
+            columnNames: name
+        - addForeignKeyConstraint:
+            constraintName: dependency_product_of_sort
+            baseColumnNames: sortid
+            baseTableName: product
+            referencedColumnNames: id
+            referencedTableName: sort
+  - changeSet:
+      id: 2
+      author: Max
+      changes:
+        - dropColumn:
+            columnName: role
+            tableName: userdata
+        - addColumn:
+            tableName: userdata
+            columns:
+              - column:
+                  name: roleid
+                  type: serial
+        - addColumn:
+            tableName: product
+            columns:
+              - column:
+                  name: purchaseprice
+                  type: integer
+              - column:
+                  name: sellingprice
+                  type: integer
+        - createTable:
+            tableName: role
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar
+        - addForeignKeyConstraint:
+            constraintName: dependency_userdata_of_roles
+            baseColumnNames: roleid
+            baseTableName: userdata
+            referencedColumnNames: id
+            referencedTableName: role
+        - createTable:
+            tableName: historyofpurchase
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar
+              - column:
+                  name: amount
+                  type: integer
+              - column:
+                  name: date
+                  type: date
+              - column:
+                  name: time
+                  type: time
+              - column:
+                  name: logistname
+                  type: varchar
+        - createTable:
+            tableName: historyofselling
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar
+              - column:
+                  name: amount
+                  type: integer
+              - column:
+                  name: date
+                  type: date
+              - column:
+                  name: time
+                  type: time
+              - column:
+                  name: sallername
+                  type: varchar
+  - changeSet:
+      id: 3
+      author: Max
+      changes:
+        - dropColumn:
+            columnName: sallername
+            tableName: historyofselling
+        - addColumn:
+            tableName: historyofselling
+            columns:
+              - column:
+                  name: sallername
+                  type: varchar
+  - changeSet:
+      id: 4
+      author: Max
+      changes:
+        - dropColumn:
+            columnName: sallername
+            tableName: historyofselling
+        - addColumn:
+            tableName: historyofselling
+            columns:
+              - column:
+                  name: sellername
+                  type: varchar
+  - changeSet:
+      id: 5
+      author: Max
+      changes:
+        - dropColumn:
+            columnName: amount
+            tableName: product
+        - dropColumn:
+            columnName: purchaseprice
+            tableName: product
+        - dropColumn:
+            columnName: sellingprice
+            tableName: product
+        - dropColumn:
+            columnName: amount
+            tableName: historyofpurchase
+        - dropColumn:
+            columnName: amount
+            tableName: historyofselling
+        - addColumn:
+            tableName: product
+            columns:
+              - column:
+                  name: amount
+                  type: serial
+        - addColumn:
+            tableName: product
+            columns:
+              - column:
+                  name: purchaseprice
+                  type: serial
+        - addColumn:
+            tableName: product
+            columns:
+              - column:
+                  name: sellingprice
+                  type: serial
+        - addColumn:
+            tableName: historyofpurchase
+            columns:
+              - column:
+                  name: amount
+                  type: serial
+        - addColumn:
+            tableName: historyofselling
+            columns:
+              - column:
+                  name: amount
+                  type: serial
+
+
+
