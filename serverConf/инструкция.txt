@@ -1,0 +1,4 @@
+chmod +x sendCommandsAndConfigsToServer.sh
+sh sendCommandsAndConfigsToServer.sh
+chmod +x conf/startConfigServer.sh
+sh startConfigServer.sh
