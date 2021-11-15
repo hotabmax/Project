@@ -1,0 +1,1 @@
+scp -r ~/serverConf root@89.108.77.208:serverConf

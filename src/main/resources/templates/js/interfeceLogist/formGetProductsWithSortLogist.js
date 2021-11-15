@@ -4,7 +4,7 @@ $(document).ready(function (){
         "   </form>");
 
     $.ajax({
-        url: "http://vsenaydetsia.ml/logist/getTableSorts",
+        url: "https://vsenaydetsia.ml/logist/getTableSorts",
         type: 'post',
         dataType: "json",
         success: function (data) {
@@ -20,7 +20,7 @@ $(document).ready(function (){
 })
 
 function clickButtonGetProductWithSort(){
-    $.ajax("http://vsenaydetsia.ml/logist/getTableProductsBySort",{
+    $.ajax("https://vsenaydetsia.ml/logist/getTableProductsBySort",{
         type: 'post',
         data: $('#formGetProductsWithSort').serialize(),
         dataType: "json",

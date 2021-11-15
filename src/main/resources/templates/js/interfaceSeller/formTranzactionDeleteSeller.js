@@ -10,7 +10,7 @@ $(document).ready(function (){
         "        </form>" +
         "</div>");
     $.ajax({
-        url: "http://vsenaydetsia.ml/seller/getTableSorts",
+        url: "https://vsenaydetsia.ml/seller/getTableSorts",
         type: 'post',
         dataType: "json",
         success: function (data) {
@@ -69,7 +69,7 @@ function eventMouseOutButtonDeleteLastItemOfBasket(){
 
 function selectProductsForTransactionDelete() {
     $.ajax({
-        url: "http://localhost:8100/seller/getTableProductsBySort",
+        url: "https://vsenaydetsia.ml/seller/getTableProductsBySort",
         type: 'post',
         data: $('#formAddToBasket').serialize(),
         dataType: "json",
@@ -90,7 +90,7 @@ function selectProductsForTransactionDelete() {
 
 dataOfBasket = new Map;
 function clickTranzactionAddBasket(){
-    $.ajax("http://localhost:8100/seller/getTableProducts", {
+    $.ajax("https://vsenaydetsia.ml/seller/getTableProducts", {
         type: 'post',
         data: $('#formAddToBasket').serialize(),
         dataType: "json",
@@ -188,7 +188,7 @@ function clickTranzactionAddBasket(){
 }
 function clickTranzactionDeleteProduct(){
     for(let i = 0; i < dataOfBasket.size; i++){
-        $.ajax("http://localhost:8100/seller/tranzactionDeleteProductAmount", {
+        $.ajax("https://vsenaydetsia.ml/seller/tranzactionDeleteProductAmount", {
             type: 'post',
             data: ($.param(dataOfBasket.get(i))),
             dataType: "text",

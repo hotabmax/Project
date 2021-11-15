@@ -12,7 +12,7 @@ $(document).ready(function (){
         "        </form>" +
         "</div>");
     $.ajax({
-        url: "http://vsenaydetsia.ml/logist/getTableSorts",
+        url: "https://vsenaydetsia.ml/logist/getTableSorts",
         type: 'post',
         dataType: "json",
         success: function (data) {
@@ -34,7 +34,7 @@ function eventMouseOutButtonAddProduct(){
 }
 
 function clickCreateProduct(){
-        $.ajax("http://vsenaydetsia.ml/logist/createProduct",{
+        $.ajax("https://vsenaydetsia.ml/logist/createProduct",{
             type: 'post',
             data: $('#formCreateProduct').serialize(),
             dataType: "json",

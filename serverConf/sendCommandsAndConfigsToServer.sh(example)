@@ -1,1 +1,0 @@
-scp -r ~/startConfigServer root@ip:startConfigServer
