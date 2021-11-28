@@ -28,13 +28,13 @@ public class HistoryOfPurchaseService {
         historyOfPurchaseRepository.deleteAll();
     }
 
-    public List<HistoryOfPurchase> findByDate(Date date){ return historyOfPurchaseRepository.findByDate(date); }
+    public List<HistoryOfPurchase> findByDate(String date){ return historyOfPurchaseRepository.findByDate(date); }
 
     public List<HistoryOfPurchase> findAll() {
         return historyOfPurchaseRepository.findAll();
     }
 
-    public void deleteByDate(Date date) {
+    public void deleteByDate(String date) {
         historyOfPurchaseRepository.deleteByDate(date);
     }
 }

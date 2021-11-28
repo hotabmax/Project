@@ -87,6 +87,9 @@ public class JUnitTestUserTable {
     }
 
     public void createAutorities() {
+        if(userService.findByName("Главный").size() == 0){
+            userService.createUser(new User("Главный", 123, rolesMap.get("admin")));
+        }
         if(userService.findByName("Максим").size() == 0){
             userService.createUser(new User("Максим", 123, rolesMap.get("logist")));
         }

@@ -24,13 +24,13 @@ public class HistoryOfSellingService {
 
     public void deleteAll() { historyOfSellingRepository.deleteAll(); }
 
-    public List<HistoryOfSelling> findByDate(Date date){ return historyOfSellingRepository.findByDate(date); }
+    public List<HistoryOfSelling> findByDate(String date){ return historyOfSellingRepository.findByDate(date); }
 
     public List<HistoryOfSelling> findAll() {
         return historyOfSellingRepository.findAll();
     }
 
-    public void deleteByDate(Date date) {
+    public void deleteByDate(String date) {
         historyOfSellingRepository.deleteByDate(date);
     }
 }

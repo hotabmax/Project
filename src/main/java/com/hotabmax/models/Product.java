@@ -12,6 +12,8 @@ public class Product {
     @Column
     private String name;
     @Column
+    private Integer code;
+    @Column
     private Integer amount;
     @Column
     private Integer purchaseprice;
@@ -26,8 +28,9 @@ public class Product {
 
     }
 
-    public Product(String name, int amount,int purchaseprice, int sellingprice, String description, int sortid) {
+    public Product(String name, int code, int amount,int purchaseprice, int sellingprice, String description, int sortid) {
         this.name = name;
+        this.code = code;
         this.amount = amount;
         this.purchaseprice = purchaseprice;
         this.sellingprice = sellingprice;
@@ -41,6 +44,14 @@ public class Product {
 
     public void setName(String Name) {
         this.name = name;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getDescription() {

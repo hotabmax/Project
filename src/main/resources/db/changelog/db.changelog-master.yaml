@@ -240,6 +240,71 @@ databaseChangeLog:
               - column:
                   name: amount
                   type: serial
-
+  - changeSet:
+      id: 6
+      author: Max
+      changes:
+        - dropTable:
+            tableName: historyofpurchase
+        - dropTable:
+            tableName: historyofselling
+        - createTable:
+            tableName: historyofpurchase
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar
+              - column:
+                  name: amount
+                  type: integer
+              - column:
+                  name: date
+                  type: varchar
+              - column:
+                  name: time
+                  type: varchar
+              - column:
+                  name: logistname
+                  type: varchar
+        - createTable:
+            tableName: historyofselling
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar
+              - column:
+                  name: amount
+                  type: integer
+              - column:
+                  name: date
+                  type: varchar
+              - column:
+                  name: time
+                  type: varchar
+              - column:
+                  name: sellername
+                  type: varchar
+  - changeSet:
+      id: 7
+      author: Max
+      changes:
+        - addColumn:
+            tableName: product
+            columns:
+              - column:
+                  name: code
+                  type: serial
 
 

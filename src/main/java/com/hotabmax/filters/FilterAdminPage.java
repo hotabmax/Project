@@ -1,9 +1,9 @@
 package com.hotabmax.filters;
 
-import com.hotabmax.models.User;
-import com.hotabmax.services.UserService;
 import com.hotabmax.models.Role;
+import com.hotabmax.models.User;
 import com.hotabmax.services.RoleService;
+import com.hotabmax.services.UserService;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +16,8 @@ import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component("FilterSallerPage")
-public class FilterSellerPage {
-
+@Component("FilterAdminPage")
+public class FilterAdminPage {
     private UserService userService;
     private RoleService roleService;
 
@@ -56,13 +55,13 @@ public class FilterSellerPage {
                         if (user.size() != 0) {
                             if (user.get(0).getPassword() == password) {
                                 if (role.get(0).getName().equals("admin")){
-                                    resultPage = "redirect:/admin";
+                                    resultPage = "admin";
                                 } else if (role.get(0).getName().equals("logist")) {
                                     System.out.println("Недостаточно прав для админа");
                                     resultPage = "redirect:/logist";
                                 } else if (role.get(0).getName().equals("seller")) {
                                     System.out.println("Недостаточно прав для админа");
-                                    resultPage = "seller";
+                                    resultPage = "redirect:/seller";
                                 } else {
                                     System.out.println("Пользователя не существует");
                                     resultPage = "autorizationErr";

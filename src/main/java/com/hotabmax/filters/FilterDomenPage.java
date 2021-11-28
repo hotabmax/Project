@@ -56,7 +56,10 @@ public class FilterDomenPage {
                         role.add(roleService.findById(user.get(0).getRoleId()));
                         if (user.size() != 0) {
                             if (user.get(0).getPassword() == password) {
-                                if (role.get(0).getName().equals("logist")){
+                                if (role.get(0).getName().equals("admin")){
+                                    resultPage = "redirect:/admin";
+                                } else if (role.get(0).getName().equals("logist")) {
+                                    System.out.println("Недостаточно прав для админа");
                                     resultPage = "redirect:/logist";
                                 } else if (role.get(0).getName().equals("seller")) {
                                     System.out.println("Недостаточно прав для админа");

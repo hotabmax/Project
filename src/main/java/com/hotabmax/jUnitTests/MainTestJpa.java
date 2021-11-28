@@ -35,17 +35,17 @@ public class MainTestJpa {
     @Bean
     public void startTesting() {
 
+        jUnitTestHistoryOfPurchase.deleteHistory();
+
+        jUnitTestHistoryOfSelling.deleteHistory();
+
         jUnitTestHistoryOfPurchase.createHistory();
 
         jUnitTestHistoryOfPurchase.findHistory();
 
-        jUnitTestHistoryOfPurchase.deleteHistory();
-
         jUnitTestHistoryOfSelling.createHistory();
 
         jUnitTestHistoryOfSelling.findHistory();
-
-        jUnitTestHistoryOfSelling.deleteHistory();
 
         jUnitTestUserTable.deleteAutorities();
 

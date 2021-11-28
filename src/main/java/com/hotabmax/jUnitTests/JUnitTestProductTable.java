@@ -31,15 +31,15 @@ public class JUnitTestProductTable {
 
     public void createRecordsProducts(int lastIdSort) {
 
-        productService.createProducts(new Product( "Кола",
+        productService.createProducts(new Product( "Кола",1,
                 50, 100, 150,"Употреблять холодным",lastIdSort));
-        productService.createProducts(new Product( "Доширак",
+        productService.createProducts(new Product( "Доширак",2,
                 50,100, 150,"Употреблять горячим",lastIdSort));
-        productService.createProducts(new Product( "Газировка",
+        productService.createProducts(new Product( "Газировка",3,
                  50, 100, 150,"Употреблять холодным",lastIdSort));
-        productService.createProducts(new Product( "Шоколад",
+        productService.createProducts(new Product( "Шоколад",4,
                  50,100, 150, "Черный шоколад",lastIdSort));
-        productService.createProducts(new Product( "Печенья",
+        productService.createProducts(new Product( "Печенья",5,
                  50,100, 150, "С шоколадной крошкой",lastIdSort));
         System.out.println("Созданы продукты - Кола, Доширак, Газировка, Шоколад, Печенья");
     }

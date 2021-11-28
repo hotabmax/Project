@@ -31,6 +31,10 @@ public class UserService {
         return userRepository.findByName(name);
     }
 
+    public List<User> findByRoleId(int roleid){
+        return userRepository.findByRoleId(roleid);
+    }
+
     public List<User> findAll() {
         return userRepository.findAll();
     }

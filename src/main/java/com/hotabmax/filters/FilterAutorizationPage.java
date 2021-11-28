@@ -45,7 +45,13 @@ public class FilterAutorizationPage {
             role.add(roleService.findById(user.get(0).getRoleId()));
             if (user.size() != 0) {
                 if (user.get(0).getPassword() == AutorityPassword) {
-                    if (role.get(0).getName().equals("logist")){
+                    if (role.get(0).getName().equals("admin")){
+                        String jws = Jwts.builder().setSubject(AutorityName+" "+AutorityPassword).signWith(key).compact();
+                        Cookie cookieAdd = new Cookie("JWT", jws);
+                        cookieAdd.setMaxAge(999999);
+                        this.cookie = cookieAdd;
+                        resultPage = "redirect:/admin";
+                    } else if (role.get(0).getName().equals("logist")) {
                         String jws = Jwts.builder().setSubject(AutorityName+" "+AutorityPassword).signWith(key).compact();
                         Cookie cookieAdd = new Cookie("JWT", jws);
                         cookieAdd.setMaxAge(999999);
@@ -62,7 +68,7 @@ public class FilterAutorizationPage {
                         resultPage = "autorizationErr";
                     }
                 }
-            };
+            }
         }
         if (resultPage.equals("autorization"))
             return autentificationPage(httpServletRequest, key,
@@ -102,7 +108,10 @@ public class FilterAutorizationPage {
         role.add(roleService.findById(user.get(0).getRoleId()));
         if (user.size() != 0) {
             if (user.get(0).getPassword() == JWTpassword) {
-                if (role.get(0).getName().equals("logist")){
+                if (role.get(0).getName().equals("admin")){
+                    resultPage = "redirect:/admin";
+                } else if (role.get(0).getName().equals("logist")) {
+                    System.out.println("Недостаточно прав для админа");
                     resultPage = "redirect:/logist";
                 } else if (role.get(0).getName().equals("seller")) {
                     System.out.println("Недостаточно прав для админа");
@@ -127,7 +136,13 @@ public class FilterAutorizationPage {
         role.add(roleService.findById(user.get(0).getRoleId()));
             if (user.size() != 0) {
                 if (user.get(0).getPassword() == AutorityPassword) {
-                    if (role.get(0).getName().equals("logist")){
+                    if (role.get(0).getName().equals("admin")){
+                        String jws = Jwts.builder().setSubject(AutorityName+" "+AutorityPassword).signWith(key).compact();
+                        Cookie cookieAdd = new Cookie("JWT", jws);
+                        cookieAdd.setMaxAge(999999);
+                        this.cookie = cookieAdd;
+                        resultPage = "redirect:/admin";
+                    } else if (role.get(0).getName().equals("logist")) {
                         String jws = Jwts.builder().setSubject(AutorityName+" "+AutorityPassword).signWith(key).compact();
                         Cookie cookieAdd = new Cookie("JWT", jws);
                         cookieAdd.setMaxAge(999999);

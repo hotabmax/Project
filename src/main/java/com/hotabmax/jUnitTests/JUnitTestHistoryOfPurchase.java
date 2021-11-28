@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,25 +23,17 @@ public class JUnitTestHistoryOfPurchase {
 
     public void createHistory(){
         historyOfPurchaseService
-                .createHistoryOfPurchase(new HistoryOfPurchase("Кола", 50,
-                                                    new Date(2000, 1, 2),
-                                                    new Time(15,15,15), "Максим"));
+                .createHistoryOfPurchase(new HistoryOfPurchase("Кола", 50, "Максим"));
         historyOfPurchaseService
-                .createHistoryOfPurchase(new HistoryOfPurchase("Кола", 50,
-                        new Date(2000, 1, 2),new Time(15,15,15),
-                        "Максим"));
+                .createHistoryOfPurchase(new HistoryOfPurchase("Кола", 50, "Максим"));
         historyOfPurchaseService
-                .createHistoryOfPurchase(new HistoryOfPurchase("Кола", 50,
-                        new Date(2000, 1, 2),new Time(15,15,15),
-                        "Максим"));
+                .createHistoryOfPurchase(new HistoryOfPurchase("Кола", 50, "Максим"));
         historyOfPurchaseService
-                .createHistoryOfPurchase(new HistoryOfPurchase("Кола", 50,
-                        new Date(2000, 1, 2),new Time(15,15,15),
-                        "Максим"));
+                .createHistoryOfPurchase(new HistoryOfPurchase("Кола", 50, "Максим"));
     }
 
     public void findHistory(){
-        historyOfPurchases = historyOfPurchaseService.findByDate(new Date(2000,1,2));
+        historyOfPurchases = historyOfPurchaseService.findByDate(new SimpleDateFormat("yyyy.MM.dd").format(new Date()));
         System.out.println("История закупок:");
         for(int i=0; i < historyOfPurchases.size(); i++){
             System.out.println(historyOfPurchases.get(i).getName()+" "+historyOfPurchases.get(i).getAmount()+" "+

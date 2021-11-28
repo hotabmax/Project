@@ -70,39 +70,33 @@ public class SellerController {
 
     @PostMapping("/seller/getTableSorts")
     @ResponseBody
-    public StringBuilder getAdminTablesSorts(HttpServletRequest httpServletRequest) {
-        StringBuilder json = new StringBuilder();
+    public String getAdminTablesSorts(HttpServletRequest httpServletRequest) {
         if(filterSellerPage.autentification(httpServletRequest, key).equals("seller")){
             sorts = sortService.findAll();
-            json.append(gson.toJson(sorts));
         }
-        return json;
+        return gson.toJson(sorts);
     }
 
     @PostMapping("/seller/getTableProducts")
     @ResponseBody
-    public StringBuilder getAdminTableProducts(HttpServletRequest httpServletRequest,
+    public String getAdminTableProducts(HttpServletRequest httpServletRequest,
                                                @RequestParam("name") String name) {
-        StringBuilder json = new StringBuilder();
         if(filterSellerPage.autentification(httpServletRequest, key).equals("seller")){
             products = productService.findByName(name);
-            json.append(gson.toJson(products));
         }
-        return json;
+        return gson.toJson(products);
     }
 
     @PostMapping("/seller/getTableProductsBySort")
     @ResponseBody
-    public StringBuilder getAdminTableProductsBySort(HttpServletRequest httpServletRequest,
+    public String getAdminTableProductsBySort(HttpServletRequest httpServletRequest,
                                                @RequestParam("nameSort") String nameSort) {
-        StringBuilder json = new StringBuilder();
         if(filterSellerPage.autentification(httpServletRequest, key).equals("seller")){
             sorts = sortService.findByName(nameSort);
             int sortid = (int) sorts.get(0).getId();
             products = productService.findBySortId(sortid);
-            json.append(gson.toJson(products));
         }
-        return json;
+        return gson.toJson(products);
     }
 
     @PostMapping("/seller/tranzactionDeleteProductAmount")

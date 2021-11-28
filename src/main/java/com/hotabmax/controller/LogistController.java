@@ -108,52 +108,35 @@ public class LogistController {
     }
 
 
-    @PostMapping("/logist/getTableUsers")
-    @ResponseBody
-    public StringBuilder getAdminTableUsers(HttpServletRequest httpServletRequest) {
-        StringBuilder json = new StringBuilder();
-        if(filterLogistPage.autentification(httpServletRequest, key).equals("logist")){
-            users = userService.findAll();
-            json.append(gson.toJson(users));
-        }
-        return json;
-    }
-
     @PostMapping("/logist/getTableProductsBySort")
     @ResponseBody
-    public StringBuilder getAdminTableProductsBySort(HttpServletRequest httpServletRequest,
+    public String getTableProductsBySort(HttpServletRequest httpServletRequest,
                                                @RequestParam("nameSort") String nameSort) {
-        StringBuilder json = new StringBuilder();
         if(filterLogistPage.autentification(httpServletRequest, key).equals("logist")){
             sorts = sortService.findByName(nameSort);
             int sortid = (int) sorts.get(0).getId();
             products = productService.findBySortId(sortid);
-            json.append(gson.toJson(products));
         }
-        return json;
+        return gson.toJson(products);
     }
 
     @PostMapping("/logist/getTableProducts")
     @ResponseBody
-    public StringBuilder getAdminTableProducts(HttpServletRequest httpServletRequest,
+    public String getTableProducts(HttpServletRequest httpServletRequest,
                                                @RequestParam("name") String name) {
-        StringBuilder json = new StringBuilder();
         if(filterLogistPage.autentification(httpServletRequest, key).equals("logist")){
             products = productService.findByName(name);
-            json.append(gson.toJson(products));
         }
-        return json;
+        return gson.toJson(products);
     }
 
     @PostMapping("/logist/getTableSorts")
     @ResponseBody
-    public StringBuilder getAdminTablesSorts(HttpServletRequest httpServletRequest) {
-        StringBuilder json = new StringBuilder();
+    public String getTablesSorts(HttpServletRequest httpServletRequest) {
         if(filterLogistPage.autentification(httpServletRequest, key).equals("logist")){
             sorts = sortService.findAll();
-            json.append(gson.toJson(sorts));
         }
-        return json;
+        return gson.toJson(sorts);
     }
 
     /*@PostMapping("/admin/createUser")
@@ -193,96 +176,19 @@ public class LogistController {
         return json;
     }*/
 
-    @PostMapping("/logist/createSort")
-    @ResponseBody
-    public void createSort(HttpServletRequest httpServletRequest,
-                                   @RequestParam("name") String name) {
-
-        if(filterLogistPage.autentification(httpServletRequest, key).equals("logist")){
-            if (userService.findByName(name).size() == 0) {
-                sorts = sortService.findAll();
-                int id = 0;
-                for(int i=0; i < sorts.size(); i++){
-                    if((int)sorts.get(i).getId() > id) id = (int)sorts.get(i).getId();
-                }
-                sortService.createSort(new Sort(++id, name));
-            }
-        }
-    }
-
-    @PostMapping("/logist/deleteSort")
-    @ResponseBody
-    public void deleteSort(HttpServletRequest httpServletRequest,
-                                   @RequestParam("name") String name) {
-        if(filterLogistPage.autentification(httpServletRequest, key).equals("logist")){
-            sortService.deleteByName(name);
-        }
-    }
-
-    @PostMapping("/logist/createProduct")
-    @ResponseBody
-    public StringBuilder createProduct(HttpServletRequest httpServletRequest,
-                                   @RequestParam("name") String name,
-                                   @RequestParam("amount") int amount,
-                                       @RequestParam("purchaseprice") int purchaseprice,
-                                       @RequestParam("sellingprice") int sellingprice,
-                                   @RequestParam("description") String description,
-                                   @RequestParam("nameSort") String nameSort) {
-        StringBuilder json = new StringBuilder();
-        if(filterLogistPage.autentification(httpServletRequest, key).equals("logist")){
-            if(purchaseprice > 0 && sellingprice > 0 && amount >= 0){
-                if (productService.findByName(name).size() == 0) {
-                    productService.createProducts(new Product(name, amount,purchaseprice,
-                            sellingprice, description,(int) sortService.findByName(nameSort).get(0).getId()));
-                }
-            }
-            products = productService.findAll();
-            json.append(gson.toJson(products));
-        }
-        return json;
-    }
-
-    @PostMapping("/logist/deleteProduct")
-    @ResponseBody
-    public StringBuilder deleteProduct(HttpServletRequest httpServletRequest,
-                                   @RequestParam("name") String name) {
-        StringBuilder json = new StringBuilder();
-        if(filterLogistPage.autentification(httpServletRequest, key).equals("logist")){
-            productService.deleteByName(name);
-            products = productService.findAll();
-            json.append(gson.toJson(products));
-        }
-        return json;
-    }
 
     @PostMapping("/logist/tranzactionAddProductAmount")
     @ResponseBody
-    public StringBuilder tranzactionAddAmount(HttpServletRequest httpServletRequest,
+    public String tranzactionAddAmount(HttpServletRequest httpServletRequest,
                                               @RequestParam("name") String name,
                                               @RequestParam("amount") int amount){
-        StringBuilder json = new StringBuilder();
-            if(filterLogistPage.autentification(httpServletRequest, key).equals("logist")){
-                if(amount > 0){
-                    productService.tranzactionAddAmount(name, amount);
-                }
-                products = productService.findAll();
-                json.append(gson.toJson(products));
-            }
-        return json;
-    }
-
-    @PostMapping("/logist/tranzactionDeleteProductAmount")
-    @ResponseBody
-    public StringBuilder tranzactionDeleteAmount(HttpServletRequest httpServletRequest,
-                                              @RequestParam("name") String name,
-                                              @RequestParam("amount") int amount){
-        StringBuilder json = new StringBuilder();
         if(filterLogistPage.autentification(httpServletRequest, key).equals("logist")){
-            productService.tranzactionDeleteAmount(name, amount);
+            if(amount > 0){
+                productService.tranzactionAddAmount(name, amount);
+            }
             products = productService.findAll();
-            json.append(gson.toJson(products));
         }
-        return json;
+        return gson.toJson(products);
     }
 
 }

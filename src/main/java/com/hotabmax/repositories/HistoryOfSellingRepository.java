@@ -13,11 +13,11 @@ public interface HistoryOfSellingRepository extends JpaRepository<HistoryOfSelli
 
     @Query(value = "select id, name, amount, date, time, sellername from historyofselling where date = :date",
             nativeQuery = true)
-    List<HistoryOfSelling> findByDate(Date date);
+    List<HistoryOfSelling> findByDate(String date);
 
     @Modifying
     @Transactional
     @Query(value = "delete from historyofselling where date = :date",
             nativeQuery = true)
-    void deleteByDate(Date date);
+    void deleteByDate(String date);
 }

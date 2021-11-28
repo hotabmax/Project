@@ -24,6 +24,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
             nativeQuery = true)
     List<User> findByName(String name);
 
+    @Query(value = "select id, name, password, roleid from userdata where roleid = :roleid",
+            nativeQuery = true)
+    List<User> findByRoleId(int roleid);
+
     /**
      *
      * @param name name of user who to need delete

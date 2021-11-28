@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,25 +23,17 @@ public class JUnitTestHistoryOfSelling {
 
     public void createHistory(){
         historyOfSellingService
-                .createHistoryOfSelling(new HistoryOfSelling("Кола", 50,
-                        new Date(2000, 1, 2),new Time(15,15,15),
-                        "Максим"));
+                .createHistoryOfSelling(new HistoryOfSelling("Кола", 50, "Максим"));
         historyOfSellingService
-                .createHistoryOfSelling(new HistoryOfSelling("Кола", 50,
-                        new Date(2000, 1, 2),new Time(15,15,15),
-                        "Максим"));
+                .createHistoryOfSelling(new HistoryOfSelling("Кола", 50, "Максим"));
         historyOfSellingService
-                .createHistoryOfSelling(new HistoryOfSelling("Кола", 50,
-                        new Date(2000, 1, 2),new Time(15,15,15),
-                        "Максим"));
+                .createHistoryOfSelling(new HistoryOfSelling("Кола", 50, "Максим"));
         historyOfSellingService
-                .createHistoryOfSelling(new HistoryOfSelling("Кола", 50,
-                        new Date(2000, 1, 2),new Time(15,15,15),
-                        "Максим"));
+                .createHistoryOfSelling(new HistoryOfSelling("Кола", 50, "Максим"));
     }
 
     public void findHistory(){
-        historyOfSellings = historyOfSellingService.findByDate(new Date(2000, 1,2));
+        historyOfSellings = historyOfSellingService.findByDate(new SimpleDateFormat("yyyy.MM.dd").format(new Date()));
         System.out.println("История Продаж:");
         for(int i=0; i < historyOfSellings.size(); i++){
             System.out.println(historyOfSellings.get(i).getName()+" "+historyOfSellings.get(i).getAmount()+" "+

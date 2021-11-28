@@ -19,7 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      * @return List of product object who contains id, name, amount, description, sortid. If this
      * product not found then List not consist object and metod size() retern 0.
      */
-    @Query(value = "select id, name, amount, purchaseprice, sellingprice, description, sortid from product where name like %:name%",
+    @Query(value = "select id, code, name, amount, purchaseprice, sellingprice, description, sortid from product where name like %:name%",
             nativeQuery = true)
     List<Product> findByName(String name);
 
@@ -34,7 +34,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     void deleteByName(String name);
 
 
-    @Query(value = "select id, name, amount, purchaseprice, sellingprice, description, sortid  from product where sortid = :sortid",
+    @Query(value = "select id, code, name, amount, purchaseprice, sellingprice, description, sortid  from product where sortid = :sortid",
             nativeQuery = true)
     List<Product> findBySortId(int sortid);
 
