@@ -19,9 +19,9 @@ public class JUnitTestRoleTable {
     private RoleService roleService;
 
     public void createRole(){
-        roleService.createRole(new Role(1, "seller"));
-        roleService.createRole(new Role(2, "logist"));
-        roleService.createRole(new Role(3, "admin"));
+        roleService.createRole(new Role(1, "Продавец"));
+        roleService.createRole(new Role(2, "Логист"));
+        roleService.createRole(new Role(3, "Администратор"));
         System.out.println("Роли созданы");
         roles = roleService.findAll();
         for(int i = 0; i < roles.size(); i++){

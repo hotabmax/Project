@@ -16,8 +16,8 @@ import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component("FilterAdminPage")
-public class FilterAdminPage {
+@Component("FilterAdminDeleteHistoryOfPurchasePage")
+public class FilterAdminDeleteHistoryOfPurchasePage {
     private UserService userService;
     private RoleService roleService;
 
@@ -49,17 +49,17 @@ public class FilterAdminPage {
                                 .getSubject();
                         String[] values = sources.split("\\s+");
                         String name = values[0];
-                        int password = Integer.parseInt(values[1].replaceAll("[^0-9]", ""));
+                        String password = values[1];
                         user = userService.findByName(name);
                         role.add(roleService.findById(user.get(0).getRoleId()));
                         if (user.size() != 0) {
-                            if (user.get(0).getPassword() == password) {
-                                if (role.get(0).getName().equals("admin")){
-                                    resultPage = "admin";
-                                } else if (role.get(0).getName().equals("logist")) {
+                            if (user.get(0).getPassword().equals(password)) {
+                                if (role.get(0).getName().equals("Администратор")){
+                                    resultPage = "adminDeleteHistoryOfPurchase";
+                                } else if (role.get(0).getName().equals("Логист")) {
                                     System.out.println("Недостаточно прав для админа");
                                     resultPage = "redirect:/logist";
-                                } else if (role.get(0).getName().equals("seller")) {
+                                } else if (role.get(0).getName().equals("Продавец")) {
                                     System.out.println("Недостаточно прав для админа");
                                     resultPage = "redirect:/seller";
                                 } else {

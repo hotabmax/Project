@@ -25,11 +25,13 @@ public class JUnitTestHistoryOfSelling {
         historyOfSellingService
                 .createHistoryOfSelling(new HistoryOfSelling("Кола", 50, "Максим"));
         historyOfSellingService
-                .createHistoryOfSelling(new HistoryOfSelling("Кола", 50, "Максим"));
+                .createHistoryOfSelling(new HistoryOfSelling("Доширак", 50, "Максим"));
         historyOfSellingService
-                .createHistoryOfSelling(new HistoryOfSelling("Кола", 50, "Максим"));
+                .createHistoryOfSelling(new HistoryOfSelling("Газировка", 50, "Максим"));
         historyOfSellingService
-                .createHistoryOfSelling(new HistoryOfSelling("Кола", 50, "Максим"));
+                .createHistoryOfSelling(new HistoryOfSelling("Шоколад", 50, "Максим"));
+        historyOfSellingService
+                .createHistoryOfSelling(new HistoryOfSelling("Печенья", 50, "Максим"));
     }
 
     public void findHistory(){

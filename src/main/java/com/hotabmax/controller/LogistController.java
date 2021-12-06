@@ -1,16 +1,20 @@
 package com.hotabmax.controller;
 
+import com.hotabmax.filters.FilterAdminDeleteHistoryOfPurchasePage;
 import com.hotabmax.filters.FilterAutorizationPage;
 import com.hotabmax.filters.FilterDomenPage;
 import com.hotabmax.filters.FilterLogistPage;
 import com.hotabmax.keygenerator.ClassOfKey;
+import com.hotabmax.models.HistoryOfPurchase;
 import com.hotabmax.models.Product;
 import com.hotabmax.models.Sort;
 import com.hotabmax.models.User;
+import com.hotabmax.services.HistoryOfPurchaseService;
 import com.hotabmax.services.ProductService;
 import com.hotabmax.services.SortService;
 import com.hotabmax.services.UserService;
 import com.google.gson.Gson;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -29,12 +33,15 @@ public class LogistController {
     private List<User> users = new ArrayList<>();
     private List<Product> products = new ArrayList<>();
     private List<Sort> sorts = new ArrayList<>();
+    private List<HistoryOfPurchase> historyOfPurchases = new ArrayList<>();
     private Gson gson = new Gson();
 
     private FilterAutorizationPage filterAutorizationPage;
     private FilterDomenPage filterDomenPage;
     private FilterLogistPage filterLogistPage;
+    private HistoryOfPurchaseService historyOfPurchaseService;
     private UserService userService;
+
     private ProductService productService;
     private SortService sortService;
     private ClassOfKey classOfKey;
@@ -44,6 +51,7 @@ public class LogistController {
             @Qualifier("FilterAutorizationPage") FilterAutorizationPage filterAutorizationPage,
             @Qualifier("FilterDomenPage") FilterDomenPage filterDomenPage,
             @Qualifier("FilterLogistPage") FilterLogistPage filterLogistPage,
+            @Qualifier("HistoryOfPurchaseService") HistoryOfPurchaseService historyOfPurchaseService,
             @Qualifier("UserService") UserService userService,
             @Qualifier("ProductService") ProductService productService,
             @Qualifier("SortService") SortService sortService,
@@ -52,6 +60,7 @@ public class LogistController {
         this.filterAutorizationPage = filterAutorizationPage;
         this.filterDomenPage = filterDomenPage;
         this.filterLogistPage = filterLogistPage;
+        this.historyOfPurchaseService = historyOfPurchaseService;
         this.userService = userService;
         this.productService = productService;
         this.sortService = sortService;
@@ -86,7 +95,7 @@ public class LogistController {
     public  String loadAutorization(HttpServletRequest httpServletRequest,
                                        HttpServletResponse httpServletResponse,
                                        @RequestParam("name") String name,
-                                       @RequestParam("password") int password) {
+                                       @RequestParam("password") String password) {
         String result;
         Cookie cookieWrite;
         result = filterAutorizationPage.autorizationIfCookieIsNull(httpServletRequest, key, name, password);
@@ -97,6 +106,7 @@ public class LogistController {
         if (filterAutorizationPage.cookieChanged()) {
             httpServletResponse.addCookie(cookieWrite);
         }
+        filterAutorizationPage.clearСookie();
         users.clear();
         return result;
     }
@@ -182,9 +192,27 @@ public class LogistController {
     public String tranzactionAddAmount(HttpServletRequest httpServletRequest,
                                               @RequestParam("name") String name,
                                               @RequestParam("amount") int amount){
+        Cookie[] cookie = httpServletRequest.getCookies();
+        String logist = new String();
         if(filterLogistPage.autentification(httpServletRequest, key).equals("logist")){
             if(amount > 0){
                 productService.tranzactionAddAmount(name, amount);
+                for(int i = 0; i < cookie.length; i++) {
+                    if (cookie[i].getName().equals("JWT")) {
+                        String jws = cookie[i].getValue();
+                        String sources = Jwts.parserBuilder()
+                                .setSigningKey(key)
+                                .build()
+                                .parseClaimsJws(jws)
+                                .getBody()
+                                .getSubject();
+                        String[] values = sources.split("\\s+");
+                        logist = values[0];
+                    }
+                }
+                historyOfPurchaseService.createHistoryOfPurchase(new HistoryOfPurchase(
+                        name, amount, logist
+                ));
             }
             products = productService.findAll();
         }

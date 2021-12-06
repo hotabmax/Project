@@ -1,26 +1,24 @@
 package com.hotabmax.controller;
 
-import com.hotabmax.filters.FilterAdminPage;
-import com.hotabmax.filters.FilterAutorizationPage;
-import com.hotabmax.filters.FilterDomenPage;
+import com.hotabmax.filters.*;
 import com.hotabmax.keygenerator.ClassOfKey;
 import com.hotabmax.models.*;
 import com.hotabmax.services.*;
 import com.google.gson.Gson;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class AdminController {
@@ -35,7 +33,11 @@ public class AdminController {
 
     private FilterAutorizationPage filterAutorizationPage;
     private FilterDomenPage filterDomenPage;
-    private FilterAdminPage filterAdminPage;
+    private FilterAdminAddOrDeleteUserPage filterAdminAddOrDeleteUserPage;
+    private FilterAdminDeleteHistoryOfPurchasePage filterAdminDeleteHistoryOfPurchasePage;
+    private FilterAdminDeleteHistoryOfSellingPage filterAdminDeleteHistoryOfSellingPage;
+    private FilterAdminAddOrDeleteNomenclaturePage filterAdminAddOrDeleteNomenclaturePage;
+    private FilterAdminGetStatistic filterAdminGetStatistic;
     private UserService userService;
     private ProductService productService;
     private SortService sortService;
@@ -47,7 +49,11 @@ public class AdminController {
     public void setDependencies(
             @Qualifier("FilterAutorizationPage") FilterAutorizationPage filterAutorizationPage,
             @Qualifier("FilterDomenPage") FilterDomenPage filterDomenPage,
-            @Qualifier("FilterAdminPage") FilterAdminPage filterAdminPage,
+            @Qualifier("FilterAdminAddOrDeleteUserPage") FilterAdminAddOrDeleteUserPage filterAdminAddOrDeleteUserPage,
+            @Qualifier("FilterAdminDeleteHistoryOfPurchasePage") FilterAdminDeleteHistoryOfPurchasePage filterAdminDeleteHistoryOfPurchasePage,
+            @Qualifier("FilterAdminDeleteHistoryOfSellingPage") FilterAdminDeleteHistoryOfSellingPage filterAdminDeleteHistoryOfSellingPage,
+            @Qualifier("FilterAdminAddOrDeleteNomenclaturePage") FilterAdminAddOrDeleteNomenclaturePage filterAdminAddOrDeleteNomenclaturePage,
+            @Qualifier("FilterAdminGetStatistic") FilterAdminGetStatistic filterAdminGetStatistic,
             @Qualifier("UserService") UserService userService,
             @Qualifier("ProductService") ProductService productService,
             @Qualifier("SortService") SortService sortService,
@@ -59,7 +65,11 @@ public class AdminController {
     ) {
         this.filterAutorizationPage = filterAutorizationPage;
         this.filterDomenPage = filterDomenPage;
-        this.filterAdminPage = filterAdminPage;
+        this.filterAdminAddOrDeleteUserPage = filterAdminAddOrDeleteUserPage;
+        this.filterAdminDeleteHistoryOfPurchasePage = filterAdminDeleteHistoryOfPurchasePage;
+        this.filterAdminDeleteHistoryOfSellingPage = filterAdminDeleteHistoryOfSellingPage;
+        this.filterAdminAddOrDeleteNomenclaturePage = filterAdminAddOrDeleteNomenclaturePage;
+        this.filterAdminGetStatistic = filterAdminGetStatistic;
         this.userService = userService;
         this.productService = productService;
         this.sortService = sortService;
@@ -79,16 +89,75 @@ public class AdminController {
         key = classOfKey.setKey();
     }
 
-    @GetMapping("/admin")
-    public String getAdmin(HttpServletRequest httpServletRequest){
-        return filterAdminPage.autentification(httpServletRequest, key);
+    @GetMapping("/adminAddOrDeleteUser")
+    public String getAdminAddOrDeleteUser(HttpServletRequest httpServletRequest){
+        return filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key);
+    }
+
+    @GetMapping("/adminDeleteHistoryOfPurchase")
+    public String getAdminDeleteHistoryOfPurchase(HttpServletRequest httpServletRequest){
+        return filterAdminDeleteHistoryOfPurchasePage.autentification(httpServletRequest, key);
+    }
+
+    @GetMapping("/adminDeleteHistoryOfSelling")
+    public String getAdminDeleteHistoryOfSelling(HttpServletRequest httpServletRequest){
+        return filterAdminDeleteHistoryOfSellingPage.autentification(httpServletRequest, key);
+    }
+
+    @GetMapping("/adminAddOrDeleteNomenclature")
+    public String getAdminAddOrDeleteNomenclature(HttpServletRequest httpServletRequest){
+        return filterAdminAddOrDeleteNomenclaturePage.autentification(httpServletRequest, key);
+    }
+
+    @GetMapping("/adminGetStatistic")
+    public String getAdminGetStatistic(HttpServletRequest httpServletRequest){
+        return filterAdminGetStatistic.autentification(httpServletRequest, key);
+    }
+
+    @PostMapping("/admin/getStatistic")
+    @ResponseBody
+    public String getStatistic(HttpServletRequest httpServletRequest,
+                               @RequestParam("year") String year,
+                               @RequestParam("mounth") String mounth){
+        int money = 0;
+        String result = new String();
+        Map<String, Integer> nomenclature = new HashMap<>();
+        if(filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key).equals("adminAddOrDeleteUser")){
+            for(int i = 1; i < 32; i++){
+                if(i/10 == 0){
+                    historyOfSelling = historyOfSellingService.findByDate(year + "." + mounth + ".0" + i);
+                } else historyOfSelling = historyOfSellingService.findByDate(year + "." + mounth + "." + i);
+                for (int z = 0; z < historyOfSelling.size(); z++){
+                    String name = historyOfSelling.get(z).getName();
+                    int sell = productService.findByName(historyOfSelling.get(z).getName()).get(0).getSellingPrice();
+                    int purchase = productService.findByName(historyOfSelling.get(z).getName()).get(0).getPurchasePrice();
+                    int amount = historyOfSelling.get(z).getAmount();
+                    if (nomenclature.containsKey(name)){
+                        nomenclature.replace(name, nomenclature.get(name) + ((sell - purchase) * amount));
+                    } else{
+                        nomenclature.put(name, (sell - purchase) * amount);
+                    }
+                    money += (sell - purchase) * amount;
+                }
+            }
+            Set<String> names = nomenclature.keySet();
+            Iterator<String> iterator = names.iterator();
+            result = "Прибыль филиала за месяц (продажи - закупки) - " + money + "р." + "<br/>";
+            while (iterator.hasNext()){
+                String name = iterator.next();
+                result += "Прибыль с продажи " + name + " за месяц (продажи - закупки) - " + nomenclature.get(name) + "р." + "<br/>";
+                System.out.println(result);
+            }
+
+        }
+        return result;
     }
 
     @PostMapping("/admin/getTableUsersByRole")
     @ResponseBody
     public String getTableUsersByRole(HttpServletRequest httpServletRequest,
                                       @RequestParam("nameRole") String nameRole){
-        if(filterAdminPage.autentification(httpServletRequest, key).equals("admin")){
+        if(filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key).equals("adminAddOrDeleteUser")){
             users = userService.findByRoleId((int) roleService.findByName(nameRole).get(0).getId());
         }
         return gson.toJson(users);
@@ -99,9 +168,9 @@ public class AdminController {
     @ResponseBody
     public String createUser(HttpServletRequest httpServletRequest,
                              @RequestParam("name") String name,
-                             @RequestParam("password") int password,
+                             @RequestParam("password") String password,
                              @RequestParam("nameRole") String nameRole){
-        if(filterAdminPage.autentification(httpServletRequest, key).equals("admin")){
+        if(filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key).equals("adminAddOrDeleteUser")){
             userService.createUser(new User(name, password,(int) roleService.findByName(nameRole).get(0).getId()));
             users = userService.findByRoleId((int) roleService.findByName(nameRole).get(0).getId());
         }
@@ -113,7 +182,7 @@ public class AdminController {
     public String deleteUser(HttpServletRequest httpServletRequest,
                              @RequestParam("name") String name,
                              @RequestParam("nameRole") String nameRole){
-        if(filterAdminPage.autentification(httpServletRequest, key).equals("admin")){
+        if(filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key).equals("adminAddOrDeleteUser")){
             userService.deleteByName(name);
             users = userService.findByRoleId((int) roleService.findByName(nameRole).get(0).getId());
         }
@@ -123,7 +192,7 @@ public class AdminController {
     @PostMapping("/admin/getTableRoles")
     @ResponseBody
     public String getRoles(HttpServletRequest httpServletRequest){
-        if(filterAdminPage.autentification(httpServletRequest, key).equals("admin")){
+        if(filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key).equals("adminAddOrDeleteUser")){
             roles = roleService.findAll();
         }
         return gson.toJson(roles);
@@ -135,7 +204,7 @@ public class AdminController {
                                        @RequestParam("year") String year,
                                        @RequestParam("mounth") String mounth,
                                        @RequestParam("day") String day){
-        if(filterAdminPage.autentification(httpServletRequest, key).equals("admin")){
+        if(filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key).equals("adminAddOrDeleteUser")){
             String date = year + "." + mounth + "." + day;
             historyOfPurchases = historyOfPurchaseService.findByDate(date);
         }
@@ -148,7 +217,7 @@ public class AdminController {
                                        @RequestParam("year") String year,
                                        @RequestParam("mounth") String mounth,
                                        @RequestParam("day") String day){
-        if(filterAdminPage.autentification(httpServletRequest, key).equals("admin")){
+        if(filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key).equals("adminAddOrDeleteUser")){
             String date = year + "." + mounth + "." + day;
             historyOfSelling = historyOfSellingService.findByDate(date);
         }
@@ -160,9 +229,25 @@ public class AdminController {
     public void tranzactionDeleteProductAmountAndHistoryOfPurchase(HttpServletRequest httpServletRequest,
                                           @RequestParam("name") String name,
                                           @RequestParam("amount") int amount){
-        if(filterAdminPage.autentification(httpServletRequest, key).equals("admin")){
+        if(filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key).equals("adminAddOrDeleteUser")){
             productService.tranzactionDeleteAmount(name, amount);
-            historyOfPurchaseService.createHistoryOfPurchase(new HistoryOfPurchase(name, -amount, "!!!Списание!!!"));
+            Cookie[] cookie = httpServletRequest.getCookies();
+            String admin = new String();
+            for(int i = 0; i < cookie.length; i++) {
+                if (cookie[i].getName().equals("JWT")) {
+                    String jws = cookie[i].getValue();
+                    String sources = Jwts.parserBuilder()
+                            .setSigningKey(key)
+                            .build()
+                            .parseClaimsJws(jws)
+                            .getBody()
+                            .getSubject();
+                    String[] values = sources.split("\\s+");
+                    admin = values[0];
+                }
+            }
+            historyOfPurchaseService.createHistoryOfPurchase(new HistoryOfPurchase(name, -amount, "!!!Списание!!! - "+admin));
+
         }
     }
 
@@ -171,8 +256,24 @@ public class AdminController {
     public void tranzactionDeleteProductAmountAndHistoryOfSelling(HttpServletRequest httpServletRequest,
                                         @RequestParam("name") String name,
                                         @RequestParam("amount") int amount){
-        if(filterAdminPage.autentification(httpServletRequest, key).equals("admin")){
-            historyOfSellingService.createHistoryOfSelling(new HistoryOfSelling(name, -amount, "!!!Возврат!!!"));
+        if(filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key).equals("adminAddOrDeleteUser")){
+            productService.tranzactionAddAmount(name, amount);
+            Cookie[] cookie = httpServletRequest.getCookies();
+            String admin = new String();
+            for(int i = 0; i < cookie.length; i++) {
+                if (cookie[i].getName().equals("JWT")) {
+                    String jws = cookie[i].getValue();
+                    String sources = Jwts.parserBuilder()
+                            .setSigningKey(key)
+                            .build()
+                            .parseClaimsJws(jws)
+                            .getBody()
+                            .getSubject();
+                    String[] values = sources.split("\\s+");
+                    admin = values[0];
+                }
+            }
+            historyOfSellingService.createHistoryOfSelling(new HistoryOfSelling(name, -amount, "!!!Возврат!!! - "+admin));
         }
     }
 
@@ -180,7 +281,7 @@ public class AdminController {
     @ResponseBody
     public String getTableProductsBySort(HttpServletRequest httpServletRequest,
                                               @RequestParam("nameSort") String nameSort) {
-        if(filterAdminPage.autentification(httpServletRequest, key).equals("admin")){
+        if(filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key).equals("adminAddOrDeleteUser")){
             sorts = sortService.findByName(nameSort);
             int sortid = (int) sorts.get(0).getId();
             products = productService.findBySortId(sortid);
@@ -192,7 +293,7 @@ public class AdminController {
     @ResponseBody
     public String getTableProducts(HttpServletRequest httpServletRequest,
                                         @RequestParam("name") String name) {
-        if(filterAdminPage.autentification(httpServletRequest, key).equals("admin")){
+        if(filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key).equals("adminAddOrDeleteUser")){
             products = productService.findByName(name);
         }
         return gson.toJson(products);
@@ -201,7 +302,7 @@ public class AdminController {
     @PostMapping("/admin/getTableSorts")
     @ResponseBody
     public String getTablesSorts(HttpServletRequest httpServletRequest) {
-        if(filterAdminPage.autentification(httpServletRequest, key).equals("admin")){
+        if(filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key).equals("adminAddOrDeleteUser")){
             sorts = sortService.findAll();
         }
         return gson.toJson(sorts);
@@ -212,7 +313,7 @@ public class AdminController {
     public void createSort(HttpServletRequest httpServletRequest,
                            @RequestParam("name") String name) {
 
-        if(filterAdminPage.autentification(httpServletRequest, key).equals("admin")){
+        if(filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key).equals("adminAddOrDeleteUser")){
             if (userService.findByName(name).size() == 0) {
                 sorts = sortService.findAll();
                 int id = 0;
@@ -228,7 +329,7 @@ public class AdminController {
     @ResponseBody
     public void deleteSort(HttpServletRequest httpServletRequest,
                            @RequestParam("name") String name) {
-        if(filterAdminPage.autentification(httpServletRequest, key).equals("admin")){
+        if(filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key).equals("adminAddOrDeleteUser")){
             sortService.deleteByName(name);
         }
     }
@@ -243,7 +344,7 @@ public class AdminController {
                                 @RequestParam("sellingprice") int sellingprice,
                                 @RequestParam("description") String description,
                                 @RequestParam("nameSort") String nameSort) {
-        if(filterAdminPage.autentification(httpServletRequest, key).equals("admin")){
+        if(filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key).equals("adminAddOrDeleteUser")){
             if(purchaseprice > 0 && sellingprice > 0 && amount >= 0){
                 if (productService.findByName(name).size() == 0) {
                     productService.createProducts(new Product(name, code, amount,purchaseprice,
@@ -259,7 +360,7 @@ public class AdminController {
     @ResponseBody
     public String deleteProduct(HttpServletRequest httpServletRequest,
                                 @RequestParam("name") String name) {
-        if(filterAdminPage.autentification(httpServletRequest, key).equals("admin")){
+        if(filterAdminAddOrDeleteUserPage.autentification(httpServletRequest, key).equals("adminAddOrDeleteUser")){
             productService.deleteByName(name);
             products = productService.findAll();
         }

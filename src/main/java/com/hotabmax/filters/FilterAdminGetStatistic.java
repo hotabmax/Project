@@ -1,9 +1,9 @@
 package com.hotabmax.filters;
 
-import com.hotabmax.models.User;
-import com.hotabmax.services.UserService;
 import com.hotabmax.models.Role;
+import com.hotabmax.models.User;
 import com.hotabmax.services.RoleService;
+import com.hotabmax.services.UserService;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +16,8 @@ import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component("FilterLogistPage")
-public class FilterLogistPage {
-
+@Component("FilterAdminGetStatistic")
+public class FilterAdminGetStatistic {
     private UserService userService;
     private RoleService roleService;
 
@@ -39,8 +38,8 @@ public class FilterLogistPage {
 
         if (cookie != null) {
             try {
-                for(int i = 0; i < cookie.length; i++) {
-                    if(cookie[i].getName().equals("JWT")) {
+                for (int i = 0; i < cookie.length; i++) {
+                    if (cookie[i].getName().equals("JWT")) {
                         String jws = cookie[i].getValue();
                         String sources = Jwts.parserBuilder()
                                 .setSigningKey(key)
@@ -55,11 +54,11 @@ public class FilterLogistPage {
                         role.add(roleService.findById(user.get(0).getRoleId()));
                         if (user.size() != 0) {
                             if (user.get(0).getPassword().equals(password)) {
-                                if (role.get(0).getName().equals("Администратор")){
-                                    resultPage = "redirect:/adminAddOrDeleteUser";
+                                if (role.get(0).getName().equals("Администратор")) {
+                                    resultPage = "adminGetStatistic";
                                 } else if (role.get(0).getName().equals("Логист")) {
                                     System.out.println("Недостаточно прав для админа");
-                                    resultPage = "logist";
+                                    resultPage = "redirect:/logist";
                                 } else if (role.get(0).getName().equals("Продавец")) {
                                     System.out.println("Недостаточно прав для админа");
                                     resultPage = "redirect:/seller";

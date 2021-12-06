@@ -306,5 +306,18 @@ databaseChangeLog:
               - column:
                   name: code
                   type: serial
+  - changeSet:
+      id: 8
+      author: Max
+      changes:
+        - dropColumn:
+            columnName: password
+            tableName: userdata
+        - addColumn:
+            tableName: userdata
+            columns:
+              - column:
+                  name: password
+                  type: varchar
 
 

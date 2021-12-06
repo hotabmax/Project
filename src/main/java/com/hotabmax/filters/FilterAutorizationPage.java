@@ -34,7 +34,7 @@ public class FilterAutorizationPage {
     }
 
     public String autorizationIfCookieIsNull(HttpServletRequest httpServletRequest,
-                                             Key key, String AutorityName, int AutorityPassword) {
+                                             Key key, String AutorityName, String AutorityPassword) {
 
         Cookie[] cookie = httpServletRequest.getCookies();
         List<User> user = new ArrayList<>();
@@ -44,20 +44,20 @@ public class FilterAutorizationPage {
             user = userService.findByName(AutorityName);
             role.add(roleService.findById(user.get(0).getRoleId()));
             if (user.size() != 0) {
-                if (user.get(0).getPassword() == AutorityPassword) {
-                    if (role.get(0).getName().equals("admin")){
+                if (user.get(0).getPassword().equals(AutorityPassword)) {
+                    if (role.get(0).getName().equals("Администратор")){
                         String jws = Jwts.builder().setSubject(AutorityName+" "+AutorityPassword).signWith(key).compact();
                         Cookie cookieAdd = new Cookie("JWT", jws);
                         cookieAdd.setMaxAge(999999);
                         this.cookie = cookieAdd;
-                        resultPage = "redirect:/admin";
-                    } else if (role.get(0).getName().equals("logist")) {
+                        resultPage = "redirect:/adminAddOrDeleteUser";
+                    } else if (role.get(0).getName().equals("Логист")) {
                         String jws = Jwts.builder().setSubject(AutorityName+" "+AutorityPassword).signWith(key).compact();
                         Cookie cookieAdd = new Cookie("JWT", jws);
                         cookieAdd.setMaxAge(999999);
                         this.cookie = cookieAdd;
                         resultPage = "redirect:/logist";
-                    } else if (role.get(0).getName().equals("seller")) {
+                    } else if (role.get(0).getName().equals("Продавец")) {
                         String jws = Jwts.builder().setSubject(AutorityName+" "+AutorityPassword).signWith(key).compact();
                         Cookie cookieAdd = new Cookie("JWT", jws);
                         cookieAdd.setMaxAge(999999);
@@ -67,8 +67,8 @@ public class FilterAutorizationPage {
                         System.out.println("Пользователя не существует");
                         resultPage = "autorizationErr";
                     }
-                }
-            }
+                } else resultPage = "autorizationErr";
+            } else resultPage = "autorizationErr";
         }
         if (resultPage.equals("autorization"))
             return autentificationPage(httpServletRequest, key,
@@ -77,9 +77,9 @@ public class FilterAutorizationPage {
     }
 
     public String autentificationPage(HttpServletRequest httpServletRequest,
-                                  Key key, String AutorityName, int AutorityPassword) {
+                                  Key key, String AutorityName, String AutorityPassword) {
         String JWTname = new String();
-        int JWTpassword = 0;
+        String JWTpassword = new String();
         Cookie[] cookie = httpServletRequest.getCookies();
         List<User> user = new ArrayList<>();
         List<Role> role = new ArrayList<>();
@@ -96,7 +96,7 @@ public class FilterAutorizationPage {
                             .getSubject();
                     values = sources.split("\\s+");
                     JWTname = values[0];
-                    JWTpassword = Integer.parseInt(values[1].replaceAll("[^0-9]", ""));
+                    JWTpassword = values[1];
 
                 }
             }
@@ -107,13 +107,13 @@ public class FilterAutorizationPage {
         user = userService.findByName(JWTname);
         role.add(roleService.findById(user.get(0).getRoleId()));
         if (user.size() != 0) {
-            if (user.get(0).getPassword() == JWTpassword) {
-                if (role.get(0).getName().equals("admin")){
-                    resultPage = "redirect:/admin";
-                } else if (role.get(0).getName().equals("logist")) {
+            if (user.get(0).getPassword().equals(JWTpassword)) {
+                if (role.get(0).getName().equals("Администратор")){
+                    resultPage = "redirect:/adminAddOrDeleteUser";
+                } else if (role.get(0).getName().equals("Логист")) {
                     System.out.println("Недостаточно прав для админа");
                     resultPage = "redirect:/logist";
-                } else if (role.get(0).getName().equals("seller")) {
+                } else if (role.get(0).getName().equals("Продавец")) {
                     System.out.println("Недостаточно прав для админа");
                     resultPage = "redirect:/seller";
                 } else {
@@ -128,27 +128,28 @@ public class FilterAutorizationPage {
         else return resultPage;
     }
 
-    public String autorization(Key key, String AutorityName, int AutorityPassword) {
+    public String autorization(Key key, String AutorityName, String AutorityPassword) {
         String resultPage = "autorization";
         List<User> user = new ArrayList<>();
         List<Role> role = new ArrayList<>();
         user = userService.findByName(AutorityName);
+        System.out.println(user.get(0).getPassword());
         role.add(roleService.findById(user.get(0).getRoleId()));
             if (user.size() != 0) {
-                if (user.get(0).getPassword() == AutorityPassword) {
-                    if (role.get(0).getName().equals("admin")){
+                if (user.get(0).getPassword().equals(AutorityPassword)) {
+                    if (role.get(0).getName().equals("Администратор")){
                         String jws = Jwts.builder().setSubject(AutorityName+" "+AutorityPassword).signWith(key).compact();
                         Cookie cookieAdd = new Cookie("JWT", jws);
                         cookieAdd.setMaxAge(999999);
                         this.cookie = cookieAdd;
-                        resultPage = "redirect:/admin";
-                    } else if (role.get(0).getName().equals("logist")) {
+                        resultPage = "redirect:/adminAddOrDeleteUser";
+                    } else if (role.get(0).getName().equals("Логист")) {
                         String jws = Jwts.builder().setSubject(AutorityName+" "+AutorityPassword).signWith(key).compact();
                         Cookie cookieAdd = new Cookie("JWT", jws);
                         cookieAdd.setMaxAge(999999);
                         this.cookie = cookieAdd;
                         resultPage = "redirect:/logist";
-                    } else if (role.get(0).getName().equals("seller")) {
+                    } else if (role.get(0).getName().equals("Продавец")) {
                         String jws = Jwts.builder().setSubject(AutorityName+" "+AutorityPassword).signWith(key).compact();
                         Cookie cookieAdd = new Cookie("JWT", jws);
                         cookieAdd.setMaxAge(999999);
@@ -158,8 +159,8 @@ public class FilterAutorizationPage {
                         System.out.println("Пользователя не существует");
                         resultPage = "autorizationErr";
                     }
-                }
-            }
+                } else resultPage = "autorizationErr";
+            } else resultPage = "autorizationErr";
         return resultPage;
     }
 
@@ -170,5 +171,9 @@ public class FilterAutorizationPage {
     public boolean cookieChanged(){
         if (this.cookie == null) return false;
         return false;
+    }
+
+    public void clearСookie(){
+        this.cookie = null;
     }
 }

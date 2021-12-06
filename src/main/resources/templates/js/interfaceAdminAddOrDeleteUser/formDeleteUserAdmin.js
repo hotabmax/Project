@@ -88,4 +88,24 @@ function clickDeleteUser() {
             div.append(table);
         }
     })
+    setTimeout(function (){
+    $.ajax({
+        url: "http://localhost:8100/admin/getTableUsersByRole",
+        type: 'post',
+        data: $('#formDeleteUser').serialize(),
+        dataType: "json",
+        success: function (data) {
+            let sel = document.getElementById('selectDeletedUser');
+            while (sel.firstChild) {
+                sel.removeChild(sel.firstChild);
+            }
+            for (let i = 0; i < data.length; i++) {
+                let name = data[i].name;
+                let opt = document.createElement('option');
+                opt.innerHTML = name;
+                sel.prepend(opt);
+            }
+        }
+    })
+    }, 100)
 }

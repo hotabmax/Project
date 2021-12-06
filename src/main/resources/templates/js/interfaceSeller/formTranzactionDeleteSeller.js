@@ -23,9 +23,14 @@ $(document).ready(function (){
             }
         }
     })
-    $('#displaybar').append("<form id='formTranzactionDeleteProduct' style='display: inline-block; margin: 10px;'>" +
-        "        <input id='buttonTranzactionDelete' style=' height: 50px; font-size: 16pt; border: 0px; border-radius:10px; background-color: #f8f8f8; padding-right: 5px'" +
-        "        type='button' value='Оплата' onClick='clickTranzactionDeleteProduct()'; onMouseOver='eventMouseOverButtonTranzactionDelete()'; onMouseOut='eventMouseOutButtonTranzactionDelete()'>" +
+    $('#displaybar').append("<form id='formTranzactionDeleteProductCash' style='display: inline-block; margin: 10px;'>" +
+        "        <input id='buttonTranzactionDeleteCash' style=' height: 50px; font-size: 16pt; border: 0px; border-radius:10px; background-color: #f8f8f8; padding-right: 5px'" +
+        "        type='button' value='Оплата наличными' onClick='clickTranzactionDeleteProductCash()'; onMouseOver='eventMouseOverButtonTranzactionDeleteCash()'; onMouseOut='eventMouseOutButtonTranzactionDeleteCash()'>" +
+        "        </form>"
+    );
+    $('#displaybar').append("<form id='formTranzactionDeleteProductCash' style='display: inline-block; margin: 10px;'>" +
+        "        <input id='buttonTranzactionDeleteElectronically' style=' height: 50px; font-size: 16pt; border: 0px; border-radius:10px; background-color: #f8f8f8; padding-right: 5px'" +
+        "        type='button' value='Оплата картой' onClick='clickTranzactionDeleteProductElectronically()'; onMouseOver='eventMouseOverButtonTranzactionDeleteElectronically()'; onMouseOut='eventMouseOutButtonTranzactionDeleteElectronically()'>" +
         "        </form>"
     );
     $('#displaybar').append("<form id='formClearBasket' style='display: inline-block; margin: 10px;'>" +
@@ -46,11 +51,18 @@ function eventMouseOutButtonAddToBasket(){
     $('#buttonAddToBasket').css('backgroundColor', '#f8f8f8');
 }
 
-function eventMouseOverButtonTranzactionDelete(){
-    $('#buttonTranzactionDelete').css('backgroundColor', '#EEEEEF');
+function eventMouseOverButtonTranzactionDeleteCash(){
+    $('#buttonTranzactionDeleteCash').css('backgroundColor', '#EEEEEF');
 }
-function eventMouseOutButtonTranzactionDelete(){
-    $('#buttonTranzactionDelete').css('backgroundColor', '#f8f8f8');
+function eventMouseOutButtonTranzactionDeleteCash(){
+    $('#buttonTranzactionDeleteCash').css('backgroundColor', '#f8f8f8');
+}
+
+function eventMouseOverButtonTranzactionDeleteElectronically(){
+    $('#buttonTranzactionDeleteElectronically').css('backgroundColor', '#EEEEEF');
+}
+function eventMouseOutButtonTranzactionDeleteElectronically(){
+    $('#buttonTranzactionDeleteElectronically').css('backgroundColor', '#f8f8f8');
 }
 
 function eventMouseOverButtonClearBasket(){
@@ -194,94 +206,201 @@ function clickTranzactionAddBasket(){
         }
     })
 }
-function clickTranzactionDeleteProduct(){
+function clickTranzactionDeleteProductCash(){
+    /*let sum = 0;
+    let ATOL = {uuid:'0ba40014-5fa5-11ea-b5e9-037d4786a49d', request:[{
+            type: 'sell',
+            taxationType: 'osn',
+            ignoreNonFiscalPrintErrors: 'false',
+            items:[],
+            payments:[],
+            total:'none'
+        }]
+    };
     for(let i = 0; i < dataOfBasket.size; i++){
+        ATOL.request[0].items[i] = {
+            type:'position',
+            name: dataOfBasket.get(i).name,
+            price: dataOfBasket.get(i).sellingprice,
+            quantity: dataOfBasket.get(i).amount,
+            amount: dataOfBasket.get(i).amount * dataOfBasket.get(i).sellingprice,
+            department: 1,
+            paymentMethod: 'fullPayment',
+            paymentObject: 'commodity',
+            tax:{
+                type:'vat20'
+            }
+        }
+        sum += dataOfBasket.get(i).sellingprice * dataOfBasket.get(i).amount;
+        if((i + 1) === dataOfBasket.size){
+            ATOL.request[0].payments[0] = {
+                type: 'cash',
+                sum: sum
+            }
+            ATOL.request[0].total = sum
+        }
+    }
+    $.ajax("http://127.0.0.1:16732/api/v2/requests", {
+        type: 'post',
+        data: JSON.stringify(ATOL),
+        dataType: "json",
+        success: function (data){*/
+            for(let i = 0; i < dataOfBasket.size; i++){
+                $.ajax("http://localhost:8100/seller/tranzactionDeleteProductAmount", {
+                    type: 'post',
+                    data: ($.param(dataOfBasket.get(i))),
+                    dataType: "text",
+                    success: function (data){
+                        $('#databar').append("<div id='t' style='margin-left: 60px; font-size: 16pt'>"+data+"</div>")
+                    }
+                })
+            }
+
+        /*},
+        error: function (){
+            $('#databar').append("<div id='t' style='margin-left: 60px; font-size: 16pt'>Ошибка</div>")
+        }
+    })*/
+    dataOfBasket.clear();
+    if($('table').is('#t')){
+        document.getElementById('t').remove();
+    }
+}
+
+function clickTranzactionDeleteProductElectronically() {
+    /*let sum = 0;
+    let ATOL = {uuid:'0ba40014-5fa5-11ea-b5e9-037d4786a49d', request:[{
+            type: 'sell',
+            taxationType: 'osn',
+            ignoreNonFiscalPrintErrors: 'false',
+            items:[],
+            payments:[],
+            total:'none'
+        }]
+    };
+    for(let i = 0; i < dataOfBasket.size; i++){
+        ATOL.request[0].items[i] = {
+            type:'position',
+            name: dataOfBasket.get(i).name,
+            price: dataOfBasket.get(i).sellingprice,
+            quantity: dataOfBasket.get(i).amount,
+            amount: dataOfBasket.get(i).amount * dataOfBasket.get(i).sellingprice,
+            department: 1,
+            paymentMethod: 'fullPayment',
+            paymentObject: 'commodity',
+            tax:{
+                type:'vat20'
+            }
+        }
+        sum += dataOfBasket.get(i).sellingprice * dataOfBasket.get(i).amount;
+        if((i + 1) === dataOfBasket.size){
+            ATOL.request[0].payments[0] = {
+                type: 'electronically',
+                sum: sum
+            }
+            ATOL.request[0].total = sum
+        }
+    }
+    $.ajax("http://127.0.0.1:16732/api/v2/requests", {
+        type: 'post',
+        data: JSON.stringify(ATOL),
+        dataType: "json",
+        success: function (data){*/
+    for (let i = 0; i < dataOfBasket.size; i++) {
         $.ajax("http://localhost:8100/seller/tranzactionDeleteProductAmount", {
             type: 'post',
             data: ($.param(dataOfBasket.get(i))),
             dataType: "text",
-            success: function (data){
-                $('#databar').append("<div id='t' style='margin-left: 60px; font-size: 16pt'>"+data+"</div>")
+            success: function (data) {
+                $('#databar').append("<div id='t' style='margin-left: 60px; font-size: 16pt'>" + data + "</div>")
             }
         })
-    }
-    dataOfBasket.clear();
-    if($('table').is('#t')){
-        document.getElementById('t').remove();
-    }
-}
 
-function clickClearBasket(){
-    dataOfBasket.clear();
-    if($('table').is('#t')){
-        document.getElementById('t').remove();
-    }
-}
+        }
+        /*},
+        error: function (){
+            $('#databar').append("<div id='t' style='margin-left: 60px; font-size: 16pt'>Ошибка</div>")
+        }
+    })*/
 
-function clickDeleteLastItemOfBasket(){
-    dataOfBasket.delete(dataOfBasket.size - 1);
-    let table = document.createElement('table');
-    table.id = "t";
-    table.style.width = "90%";
-    table.style.marginLeft = "5%";
-    table.style.marginTop = "5%";
-    table.style.borderSpacing = "0px";
-    table.style.fontSize = "16pt";
-    let html = "<tr> " +
-        "<td style='border: 1px solid #545454; border-top-left-radius:30px; text-align: center; height: 50px; background-color: #545454; color: white'>Название</td>" +
-        "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: #545454; color: white'>Код товара</td>"+
-        "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: #545454; color: white'>Количество</td>"+
-        "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: #545454; color: white'>Цена за шт</td>"+
-        "<td style='border: 1px solid #545454; border-top-right-radius: 30px; text-align: center; height: 50px; background-color: #545454; color: white'>Общая цена</td>" +
-        " </tr>";
-    let summ = 0;
-    let amnt = 0;
-    for(let i = 0; i < dataOfBasket.size; i++){
-        summ += dataOfBasket.get(i).sellingprice * dataOfBasket.get(i).amount;
-        if(i === 0 && dataOfBasket.size === 1){
-            console.log("Этап1");
-            html += "<tr>" +
-                "<td style='border: 1px solid #545454; border-bottom-left-radius: 30px; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).name +"</td>" +
-                "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).code + "</td>" +
-                "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).amount + "</td>" +
-                "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>"+ dataOfBasket.get(i).sellingprice + "</td>" +
-                "<td id='totalPrice' style='border: 1px solid #545454; border-bottom-right-radius: 30px;  text-align: center; height: 50px; background-color: white'></td>" +
-                "</tr>";
-        }
-        if(i === 0 && dataOfBasket.size !== 1){
-            console.log("Этап2");
-            html += "<tr>" +
-                "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).name +"</td>" +
-                "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).code +"</td>" +
-                "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).amount + "</td>" +
-                "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>"+ dataOfBasket.get(i).sellingprice + "</td>" +
-                "<td id='totalPrice' style='border: 1px solid #545454; border-bottom-right-radius: 30px;  text-align: center; height: 50px; background-color: white'></td>" +
-                "</tr>";
-        }else if(i !== dataOfBasket.size - 1 && i !== 0){
-            console.log("Этап3");
-            html += "<tr>" +
-                "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).name +"</td>" +
-                "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).code +"</td>" +
-                "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).amount + "</td>" +
-                "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>"+ dataOfBasket.get(i).sellingprice + "</td>" +
-                "</tr>";
-        } else if(i !== 0) {
-            console.log("Этап4");
-            html += "<tr>" +
-                "<td style='border: 1px solid #545454; border-bottom-left-radius: 30px; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).name +"</td>" +
-                "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).code + "</td>" +
-                "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).amount + "</td>" +
-                "<td style='border: 1px solid #545454; border-bottom-right-radius: 30px; text-align: center; height: 50px; background-color: white'>"+ dataOfBasket.get(i).sellingprice + "</td>" +
-                "</tr>";
-        }
-    }
-    table.innerHTML = html;
-    let div = document.getElementById('databar');
-    if($('table').is('#t') || $('div').is('#t')){
-        while ($('table').is('#t') || $('div').is('#t')){
+        console.log(JSON.stringify(ATOL))
+        dataOfBasket.clear();
+        if ($('table').is('#t')) {
             document.getElementById('t').remove();
         }
     }
-    div.append(table);
-    $('#totalPrice').text(summ);
-}
+
+    function clickClearBasket() {
+        dataOfBasket.clear();
+        if ($('table').is('#t')) {
+            document.getElementById('t').remove();
+        }
+    }
+
+    function clickDeleteLastItemOfBasket() {
+        dataOfBasket.delete(dataOfBasket.size - 1);
+        let table = document.createElement('table');
+        table.id = "t";
+        table.style.width = "90%";
+        table.style.marginLeft = "5%";
+        table.style.marginTop = "5%";
+        table.style.borderSpacing = "0px";
+        table.style.fontSize = "16pt";
+        let html = "<tr> " +
+            "<td style='border: 1px solid #545454; border-top-left-radius:30px; text-align: center; height: 50px; background-color: #545454; color: white'>Название</td>" +
+            "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: #545454; color: white'>Код товара</td>" +
+            "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: #545454; color: white'>Количество</td>" +
+            "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: #545454; color: white'>Цена за шт</td>" +
+            "<td style='border: 1px solid #545454; border-top-right-radius: 30px; text-align: center; height: 50px; background-color: #545454; color: white'>Общая цена</td>" +
+            " </tr>";
+        let summ = 0;
+        let amnt = 0;
+        for (let i = 0; i < dataOfBasket.size; i++) {
+            summ += dataOfBasket.get(i).sellingprice * dataOfBasket.get(i).amount;
+            if (i === 0 && dataOfBasket.size === 1) {
+                console.log("Этап1");
+                html += "<tr>" +
+                    "<td style='border: 1px solid #545454; border-bottom-left-radius: 30px; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).name + "</td>" +
+                    "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).code + "</td>" +
+                    "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).amount + "</td>" +
+                    "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).sellingprice + "</td>" +
+                    "<td id='totalPrice' style='border: 1px solid #545454; border-bottom-right-radius: 30px;  text-align: center; height: 50px; background-color: white'></td>" +
+                    "</tr>";
+            }
+            if (i === 0 && dataOfBasket.size !== 1) {
+                console.log("Этап2");
+                html += "<tr>" +
+                    "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).name + "</td>" +
+                    "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).code + "</td>" +
+                    "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).amount + "</td>" +
+                    "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).sellingprice + "</td>" +
+                    "<td id='totalPrice' style='border: 1px solid #545454; border-bottom-right-radius: 30px;  text-align: center; height: 50px; background-color: white'></td>" +
+                    "</tr>";
+            } else if (i !== dataOfBasket.size - 1 && i !== 0) {
+                console.log("Этап3");
+                html += "<tr>" +
+                    "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).name + "</td>" +
+                    "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).code + "</td>" +
+                    "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).amount + "</td>" +
+                    "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).sellingprice + "</td>" +
+                    "</tr>";
+            } else if (i !== 0) {
+                console.log("Этап4");
+                html += "<tr>" +
+                    "<td style='border: 1px solid #545454; border-bottom-left-radius: 30px; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).name + "</td>" +
+                    "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).code + "</td>" +
+                    "<td style='border: 1px solid #545454; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).amount + "</td>" +
+                    "<td style='border: 1px solid #545454; border-bottom-right-radius: 30px; text-align: center; height: 50px; background-color: white'>" + dataOfBasket.get(i).sellingprice + "</td>" +
+                    "</tr>";
+            }
+        }
+        table.innerHTML = html;
+        let div = document.getElementById('databar');
+        if ($('table').is('#t') || $('div').is('#t')) {
+            while ($('table').is('#t') || $('div').is('#t')) {
+                document.getElementById('t').remove();
+            }
+        }
+        div.append(table);
+        $('#totalPrice').text(summ);
+    }

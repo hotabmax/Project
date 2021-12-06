@@ -42,7 +42,7 @@ public class JUnitTestUserTable {
 
     public void createRecordAndDeleteAndCheckStatus() {
         userService.createUser(new User( "Альберт",
-                8888, rolesMap.get("seller") ));
+                "8888", rolesMap.get("Продавец") ));
         users = userService.findByName("Альберт");
         System.out.println("Имя-" + users.get(0).getName()
                 + " " + "Пароль-" + users.get(0).getPassword() + " " +
@@ -61,15 +61,15 @@ public class JUnitTestUserTable {
 
     public void createRecordsUsersAndDeleteAndCheckStatus() {
         userService.createUser(new User( "Альберт",
-                8888, rolesMap.get("seller") ));
+                "8888", rolesMap.get("Логист") ));
         userService.createUser(new User( "Софья",
-                8888, rolesMap.get("seller") ));
+                "8888", rolesMap.get("Логист") ));
         userService.createUser(new User( "Евгений",
-                8888, rolesMap.get("seller") ));
+                "8888", rolesMap.get("Логист") ));
         userService.createUser(new User( "Алёна",
-                8888, rolesMap.get("seller") ));
+                "8888", rolesMap.get("Логист") ));
         userService.createUser(new User( "Давид",
-                8888, rolesMap.get("seller") ));
+                "8888", rolesMap.get("Логист") ));
         users = userService.findAll();
         for(int i = 0; i < users.size(); i++) {
             System.out.println("Имя-" + users.get(i).getName()
@@ -88,27 +88,27 @@ public class JUnitTestUserTable {
 
     public void createAutorities() {
         if(userService.findByName("Главный").size() == 0){
-            userService.createUser(new User("Главный", 123, rolesMap.get("admin")));
+            userService.createUser(new User("Главный", "123", rolesMap.get("Администратор")));
         }
         if(userService.findByName("Максим").size() == 0){
-            userService.createUser(new User("Максим", 123, rolesMap.get("logist")));
+            userService.createUser(new User("Максим", "123", rolesMap.get("Логист")));
         }
         if(userService.findByName("Дима").size() == 0) {
-            userService.createUser(new User( "Дима", 123, rolesMap.get("seller")));
+            userService.createUser(new User( "Дима", "123", rolesMap.get("Продавец")));
         }
     }
 
     public void createDemoUsers() {
         userService.createUser(new User( "Альберт",
-                8888, rolesMap.get("seller") ));
+                "8888", rolesMap.get("Продавец") ));
         userService.createUser(new User( "Софья",
-                8888, rolesMap.get("seller") ));
+                "8888", rolesMap.get("Продавец") ));
         userService.createUser(new User( "Евгений",
-                8888, rolesMap.get("seller") ));
+                "8888", rolesMap.get("Продавец") ));
         userService.createUser(new User( "Алёна",
-                8888, rolesMap.get("seller") ));
+                "8888", rolesMap.get("Продавец") ));
         userService.createUser(new User( "Давид",
-                8888, rolesMap.get("seller") ));
+                "8888", rolesMap.get("Продавец") ));
     }
 
     public void deleteAutorities(){

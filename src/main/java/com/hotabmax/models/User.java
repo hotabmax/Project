@@ -12,7 +12,7 @@ public class User {
     @Column
     private String name;
     @Column
-    private int password;
+    private String password;
     @Column
     private Integer roleid;
 
@@ -20,7 +20,7 @@ public class User {
 
     }
 
-    public User(String name, int password, int roleid) {
+    public User(String name, String password, int roleid) {
         this.name = name;
         this.password = password;
         this.roleid = roleid;
@@ -34,11 +34,11 @@ public class User {
         this.name = name;
     }
 
-    public int getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    void setPassword(int password) {
+    void setPassword(String password) {
         this.password = password;
     }
 
