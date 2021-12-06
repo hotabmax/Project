@@ -145,7 +145,9 @@ public class AdminController {
             result = "Прибыль филиала за месяц (продажи - закупки) - " + money + "р." + "<br/>";
             while (iterator.hasNext()){
                 String name = iterator.next();
-                result += "Прибыль с продажи " + name + " за месяц (продажи - закупки) - " + nomenclature.get(name) + "р." + "<br/>";
+                int amount = nomenclature.get(name) / (productService.findByName(name).get(0).getSellingPrice() -
+                        productService.findByName(name).get(0).getPurchasePrice());
+                result += "Прибыль с продажи " + name + " ( " + amount + "шт.)" + " за месяц (продажи - закупки) - " + nomenclature.get(name) + "р." + "<br/>";
                 System.out.println(result);
             }
 
