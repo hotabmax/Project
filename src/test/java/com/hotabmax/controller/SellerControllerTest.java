@@ -5,10 +5,7 @@ import com.hotabmax.filters.resultForFilterAutorization.ResultForFilterAutorizat
 import com.hotabmax.models.Product;
 import com.hotabmax.models.Sort;
 import com.hotabmax.models.User;
-import com.hotabmax.servicesJPA.ProductService;
-import com.hotabmax.servicesJPA.RoleService;
-import com.hotabmax.servicesJPA.SortService;
-import com.hotabmax.servicesJPA.UserService;
+import com.hotabmax.servicesJPA.*;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +39,8 @@ class SellerControllerTest {
     private SortService sortService;
     @Autowired
     private ClassOfKey classOfKey;
+    @Autowired
+    private HistoryOfSellingService historyOfSellingService;
 
     private MockMvc mockMvc;
     private Key key;
@@ -57,81 +56,110 @@ class SellerControllerTest {
 
     @Test
     void getTablesSorts() throws Exception{
-        key = classOfKey.setKey();
-        userService.createUser(new User("Тест", "123",(int)roleService.findByName("Продавец").get(0).getId()));
-        jws = Jwts.builder().setSubject("Тест"+" "+"123").signWith(key).compact();
-        cookie = new Cookie("JWT", jws);
-        sortService.createSort(new Sort(1, "Тест"));
-        mockMvc.perform(MockMvcRequestBuilders.post("/seller/getTableSorts")
-                        .cookie(cookie)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[{'name': 'Тест'}]"));
-        userService.deleteByName("Тест");
-        sortService.deleteByName("Тест");
+        try{
+            key = classOfKey.getKey();
+            userService.createUser(new User("Тест", "123",(int)roleService.findByName("Продавец").get(0).getId()));
+            jws = Jwts.builder().setSubject("Тест"+" "+"123").signWith(key).compact();
+            cookie = new Cookie("JWT", jws);
+            sortService.createSort(new Sort(92194, "Тест"));
+            mockMvc.perform(MockMvcRequestBuilders.post("/seller/getTableSorts")
+                            .cookie(cookie)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(content().json("[{'name': 'Тест'}]"));
+            userService.deleteByName("Тест");
+            sortService.deleteByName("Тест");
+        } catch (Exception exc){
+            userService.deleteByName("Тест");
+            sortService.deleteByName("Тест");
+        }
+
     }
 
     @Test
     void getTableProducts() throws Exception{
-        key = classOfKey.setKey();
-        userService.createUser(new User("Тест", "123",(int)roleService.findByName("Продавец").get(0).getId()));
-        jws = Jwts.builder().setSubject("Тест"+" "+"123").signWith(key).compact();
-        cookie = new Cookie("JWT", jws);
-        sortService.createSort(new Sort(1, "Тест"));
-        productService.createProducts(new Product("Тест",1,
-                50, 100, 150,
-                "Напиток",(int) sortService.findByName("Тест").get(0).getId()));
-        mockMvc.perform(MockMvcRequestBuilders.post("/seller/getTableProducts?name=Тест")
-                        .cookie(cookie)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[{'name': 'Тест', 'code': 1, 'amount': 50," +
-                        "'purchaseprice': 100, 'sellingprice': 150," +
-                        " 'description': 'Напиток'}]"));
-        userService.deleteByName("Тест");
-        productService.deleteByName("Тест");
-        sortService.deleteByName("Тест");
+        try {
+            key = classOfKey.getKey();
+            userService.createUser(new User("Тест", "123",(int)roleService.findByName("Продавец").get(0).getId()));
+            jws = Jwts.builder().setSubject("Тест"+" "+"123").signWith(key).compact();
+            cookie = new Cookie("JWT", jws);
+            sortService.createSort(new Sort(92194, "Тест"));
+            productService.createProducts(new Product("Тест",1,
+                    50, 100, 150,
+                    "Напиток",(int) sortService.findByName("Тест").get(0).getId()));
+            mockMvc.perform(MockMvcRequestBuilders.post("/seller/getTableProducts?name=Тест")
+                            .cookie(cookie)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(content().json("[{'name': 'Тест', 'code': 1, 'amount': 50," +
+                            "'purchaseprice': 100, 'sellingprice': 150," +
+                            " 'description': 'Напиток'}]"));
+            userService.deleteByName("Тест");
+            productService.deleteByName("Тест");
+            sortService.deleteByName("Тест");
+        } catch (Exception exc){
+            userService.deleteByName("Тест");
+            productService.deleteByName("Тест");
+            sortService.deleteByName("Тест");
+        }
+
     }
 
     @Test
     void getTableProductsBySort() throws Exception{
-        key = classOfKey.setKey();
-        userService.createUser(new User("Тест", "123",(int)roleService.findByName("Продавец").get(0).getId()));
-        jws = Jwts.builder().setSubject("Тест"+" "+"123").signWith(key).compact();
-        cookie = new Cookie("JWT", jws);
-        sortService.createSort(new Sort(1, "Тест"));
-        productService.createProducts(new Product("Тест",1,
-                50, 100, 150,
-                "Напиток",(int) sortService.findByName("Тест").get(0).getId()));
-        mockMvc.perform(MockMvcRequestBuilders.post("/seller/getTableProductsBySort?nameSort=Тест")
-                        .cookie(cookie)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[{'name': 'Тест', 'code': 1, 'amount': 50," +
-                        "'purchaseprice': 100, 'sellingprice': 150," +
-                        " 'description': 'Напиток'}]"));
-        userService.deleteByName("Тест");
-        productService.deleteByName("Тест");
-        sortService.deleteByName("Тест");
+        try {
+            key = classOfKey.getKey();
+            userService.createUser(new User("Тест", "123",(int)roleService.findByName("Продавец").get(0).getId()));
+            jws = Jwts.builder().setSubject("Тест"+" "+"123").signWith(key).compact();
+            cookie = new Cookie("JWT", jws);
+            sortService.createSort(new Sort(92194, "Тест"));
+            productService.createProducts(new Product("Тест",1,
+                    50, 100, 150,
+                    "Напиток",(int) sortService.findByName("Тест").get(0).getId()));
+            mockMvc.perform(MockMvcRequestBuilders.post("/seller/getTableProductsBySort?nameSort=Тест")
+                            .cookie(cookie)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(content().json("[{'name': 'Тест', 'code': 1, 'amount': 50," +
+                            "'purchaseprice': 100, 'sellingprice': 150," +
+                            " 'description': 'Напиток'}]"));
+            userService.deleteByName("Тест");
+            productService.deleteByName("Тест");
+            sortService.deleteByName("Тест");
+        } catch (Exception exc){
+            userService.deleteByName("Тест");
+            productService.deleteByName("Тест");
+            sortService.deleteByName("Тест");
+        }
+
     }
 
     @Test
     void tranzactionDeleteAmount() throws Exception{
-        key = classOfKey.setKey();
-        userService.createUser(new User("Тест", "123",(int)roleService.findByName("Продавец").get(0).getId()));
-        jws = Jwts.builder().setSubject("Тест"+" "+"123").signWith(key).compact();
-        cookie = new Cookie("JWT", jws);
-        sortService.createSort(new Sort(1, "Тест"));
-        productService.createProducts(new Product("Тест",1,
-                50, 100, 150,
-                "Напиток",(int) sortService.findByName("Тест").get(0).getId()));
-        mockMvc.perform(MockMvcRequestBuilders.post("/seller/tranzactionDeleteProductAmount?name=Тест&amount=10")
-                        .cookie(cookie)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Оплачен товар Тест в количестве - 10"));
-        userService.deleteByName("Тест");
-        productService.deleteByName("Тест");
-        sortService.deleteByName("Тест");
+        try {
+            key = classOfKey.getKey();
+            userService.createUser(new User("Тест", "123",(int)roleService.findByName("Продавец").get(0).getId()));
+            jws = Jwts.builder().setSubject("Тест"+" "+"123").signWith(key).compact();
+            cookie = new Cookie("JWT", jws);
+            sortService.createSort(new Sort(92194, "Тест"));
+            productService.createProducts(new Product("Тест",1,
+                    50, 100, 150,
+                    "Напиток",(int) sortService.findByName("Тест").get(0).getId()));
+            mockMvc.perform(MockMvcRequestBuilders.post("/seller/tranzactionDeleteProductAmount?name=Тест&amount=10")
+                            .cookie(cookie)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(content().string("Оплачен товар Тест в количестве - 10"));
+            userService.deleteByName("Тест");
+            productService.deleteByName("Тест");
+            sortService.deleteByName("Тест");
+            historyOfSellingService.deleteAll();
+        } catch (Exception exc){
+            userService.deleteByName("Тест");
+            productService.deleteByName("Тест");
+            sortService.deleteByName("Тест");
+            historyOfSellingService.deleteAll();
+        }
+
     }
 }

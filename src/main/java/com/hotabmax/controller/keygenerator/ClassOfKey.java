@@ -1,4 +1,4 @@
-package com.hotabmax.keygenerator;
+package com.hotabmax.controller.keygenerator;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -13,7 +13,7 @@ import java.security.Key;
 public class ClassOfKey {
     private Key key;
 
-    public Key setKey() {
+    public Key getKey() {
         if(this.key == null){
             this.key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         }

@@ -19,26 +19,36 @@ class RoleServiceTest {
 
     @Test
     void findByName() {
-        Role testRole = new Role(1, "Тест");
-        roleService.createRole(testRole);
-        Role findedRole = roleService.findByName("Тест").get(0);
-        testRole.setId(findedRole.getId());
-        roleService.deleteByName("Тест");
-        assertEquals(gson.toJson(testRole), gson.toJson(findedRole));
+        try {
+            Role testRole = new Role(1, "Тест");
+            roleService.createRole(testRole);
+            Role findedRole = roleService.findByName("Тест").get(0);
+            testRole.setId(findedRole.getId());
+            roleService.deleteByName("Тест");
+            assertEquals(gson.toJson(testRole), gson.toJson(findedRole));
+        } catch (Exception exc){
+            roleService.deleteByName("Тест");
+        }
+
     }
 
     @Test
     void deleteByName() {
-        Role testRole = new Role(1, "Тест");
-        roleService.createRole(testRole);
-        roleService.deleteByName("Тест");
-        List<Role> roles = roleService.findByName("Тест");
-        Role findedRole = new Role();
-        if (roles.size() != 0){
-            findedRole = roles.get(0);
-            testRole.setId(findedRole.getId());
+        try {
+            Role testRole = new Role(1, "Тест");
+            roleService.createRole(testRole);
+            roleService.deleteByName("Тест");
+            List<Role> roles = roleService.findByName("Тест");
+            Role findedRole = new Role();
+            if (roles.size() != 0){
+                findedRole = roles.get(0);
+                testRole.setId(findedRole.getId());
+            }
+            roleService.deleteByName("Тест");
+            assertNotEquals(gson.toJson(testRole), gson.toJson(findedRole));
+        } catch (Exception exc){
+            roleService.deleteByName("Тест");
         }
-        roleService.deleteByName("Тест");
-        assertNotEquals(gson.toJson(testRole), gson.toJson(findedRole));
+
     }
 }

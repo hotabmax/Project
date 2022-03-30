@@ -11,13 +11,13 @@ import java.util.List;
 
 public interface HistoryOfSellingRepository extends JpaRepository<HistoryOfSelling, Long> {
 
-    @Query(value = "select id, name, amount, date, time, sellername from historyofselling where date = :date",
+    @Query(value = "select id, name, amount, date, time, sellername from historyofselling where date like %:date%",
             nativeQuery = true)
     List<HistoryOfSelling> findByDate(String date);
 
     @Modifying
     @Transactional
-    @Query(value = "delete from historyofselling where date = :date",
+    @Query(value = "delete from historyofselling where date like %:date%",
             nativeQuery = true)
     void deleteByDate(String date);
 }

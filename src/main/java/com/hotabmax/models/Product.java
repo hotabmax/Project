@@ -93,4 +93,5 @@ public class Product {
     public void setSortid(Integer sortid) {
         this.sortid = sortid;
     }
+
 }

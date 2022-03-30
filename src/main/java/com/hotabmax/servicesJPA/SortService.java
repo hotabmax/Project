@@ -1,4 +1,4 @@
-package com.hotabmax.services;
+package com.hotabmax.servicesJPA;
 
 import com.hotabmax.models.Sort;
 import com.hotabmax.repositories.SortRepository;
@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-@Component("SortService")
 @Service
 public class SortService {
 

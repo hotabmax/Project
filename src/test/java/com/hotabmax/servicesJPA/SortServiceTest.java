@@ -19,26 +19,36 @@ class SortServiceTest {
 
     @Test
     void findByName() {
-        Sort testSort = new Sort(1, "Тест");
-        sortService.createSort(testSort);
-        Sort findedSort = sortService.findByName("Тест").get(0);
-        testSort.setId(findedSort.getId());
-        sortService.deleteByName("Тест");
-        assertEquals(gson.toJson(testSort), gson.toJson(findedSort));
+        try {
+            Sort testSort = new Sort(1, "Тест");
+            sortService.createSort(testSort);
+            Sort findedSort = sortService.findByName("Тест").get(0);
+            testSort.setId(findedSort.getId());
+            sortService.deleteByName("Тест");
+            assertEquals(gson.toJson(testSort), gson.toJson(findedSort));
+        } catch (Exception exc){
+            sortService.deleteByName("Тест");
+        }
+
     }
 
     @Test
     void deleteByName() {
-        Sort testSort = new Sort(1, "Тест");
-        sortService.createSort(testSort);
-        List<Sort> sorts = sortService.findByName("Тест");
-        Sort findedSort = new Sort();
-        if (sorts.size() != 0){
-            findedSort = sorts.get(0);
+        try {
+            Sort testSort = new Sort(1, "Тест");
+            sortService.createSort(testSort);
+            List<Sort> sorts = sortService.findByName("Тест");
+            Sort findedSort = new Sort();
+            if (sorts.size() != 0){
+                findedSort = sorts.get(0);
+                testSort.setId(findedSort.getId());
+            }
             testSort.setId(findedSort.getId());
+            sortService.deleteByName("Тест");
+            assertEquals(gson.toJson(testSort), gson.toJson(findedSort));
+        } catch (Exception exc){
+            sortService.deleteByName("Тест");
         }
-        testSort.setId(findedSort.getId());
-        sortService.deleteByName("Тест");
-        assertEquals(gson.toJson(testSort), gson.toJson(findedSort));
+
     }
 }

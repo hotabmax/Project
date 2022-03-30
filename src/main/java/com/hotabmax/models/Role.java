@@ -18,12 +18,15 @@ public class Role {
     }
 
     public Role(int id, String name){
-        this.id =(long) id;
+        this.id = (long)id;
         this.name = name;
     }
-
     public long getId(){
         return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName(){
@@ -33,4 +36,5 @@ public class Role {
     public void setName(String name){
         this.name = name;
     }
+
 }

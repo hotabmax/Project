@@ -1,4 +1,4 @@
-package com.hotabmax.services;
+package com.hotabmax.servicesJPA;
 
 import com.hotabmax.models.User;
 import com.hotabmax.repositories.UserRepository;
@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-@Component("UserService")
 @Service
 public class UserService {
 

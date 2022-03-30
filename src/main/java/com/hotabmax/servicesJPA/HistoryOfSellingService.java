@@ -1,4 +1,4 @@
-package com.hotabmax.services;
+package com.hotabmax.servicesJPA;
 
 import com.hotabmax.repositories.HistoryOfSellingRepository;
 import com.hotabmax.models.HistoryOfSelling;
@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
-
-@Component("HistoryOfSellingService")
 @Service
 public class HistoryOfSellingService {
 

@@ -45,4 +45,6 @@ public class User {
     public int getRoleId() { return roleid; }
 
     void setRoleId(int roleid) { this.roleid = roleid; }
+
+
 }

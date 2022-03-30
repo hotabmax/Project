@@ -4,6 +4,7 @@ import com.hotabmax.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -29,7 +30,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      */
     @Modifying
     @Transactional
-    @Query(value = "delete from product where name like %:name%",
+    @Query(value = "delete from product where name = :name",
             nativeQuery = true)
     void deleteByName(String name);
 
@@ -41,13 +42,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "update product set amount = cast (amount as integer) + :amount where name like %:name%",
+    @Query(value = "update product set amount = cast (amount as integer) + :amount where name = :name",
             nativeQuery = true)
     void tranzactionAddAmount(String name, int amount);
 
     @Modifying
     @Transactional
-    @Query(value = "update product set amount = cast (amount as integer) - :amount where name like %:name%",
+    @Query(value = "update product set amount = cast (amount as integer) - :amount where name = :name",
             nativeQuery = true)
     void tranzactionDeleteAmount(String name, int amount);
 

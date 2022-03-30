@@ -1,4 +1,4 @@
-package com.hotabmax.services;
+package com.hotabmax.servicesJPA;
 
 import com.hotabmax.repositories.RoleRepository;
 import com.hotabmax.models.Role;
@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-@Component("RoleService")
 @Service
 public class RoleService {
     @Autowired

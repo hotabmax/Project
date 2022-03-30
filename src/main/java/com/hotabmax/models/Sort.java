@@ -17,11 +17,15 @@ public class Sort {
     }
 
     public Sort(int id, String name) {
-        this.id =(long) id;
+        this.id = (long)id;
         this.name = name;
     }
 
     public long getId() { return id; }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

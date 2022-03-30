@@ -1,4 +1,4 @@
-package com.hotabmax.services;
+package com.hotabmax.servicesJPA;
 
 import com.hotabmax.models.Product;
 import com.hotabmax.repositories.ProductRepository;
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component("ProductService")
 @Service
 public class ProductService {
 

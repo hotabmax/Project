@@ -23,42 +23,59 @@ class UserServiceTest {
 
     @Test
     void findByName() {
-        roleService.createRole(new Role(1, "Тест"));
-        User testUser = new User("Тест", "Тестовый продукт",
-                (int) roleService.findByName("Тест").get(0).getId());
-        userService.createUser(testUser);
-        User findedUser = userService.findByName("Тест").get(0);
-        userService.deleteByName("Тест");
-        roleService.deleteByName("Тест");
-        assertEquals(gson.toJson(testUser), gson.toJson(findedUser));
+        try {
+            roleService.createRole(new Role(1, "Тест"));
+            User testUser = new User("Тест", "Тестовый продукт",
+                    (int) roleService.findByName("Тест").get(0).getId());
+            userService.createUser(testUser);
+            User findedUser = userService.findByName("Тест").get(0);
+            userService.deleteByName("Тест");
+            roleService.deleteByName("Тест");
+            assertEquals(gson.toJson(testUser), gson.toJson(findedUser));
+        } catch (Exception exc){
+            userService.deleteByName("Тест");
+            roleService.deleteByName("Тест");
+        }
+
     }
 
     @Test
     void findByRoleId() {
-        roleService.createRole(new Role(1, "Тест"));
-        User testUser = new User("Тест", "Тестовый продукт",
-                (int) roleService.findByName("Тест").get(0).getId());
-        userService.createUser(testUser);
-        User findedUser = userService.findByRoleId(
-                (int) roleService.findByName("Тест").get(0).getId()).get(0);
-        userService.deleteByName("Тест");
-        roleService.deleteByName("Тест");
-        assertEquals(gson.toJson(testUser), gson.toJson(findedUser));
+        try {
+            roleService.createRole(new Role(1, "Тест"));
+            User testUser = new User("Тест", "Тестовый продукт",
+                    (int) roleService.findByName("Тест").get(0).getId());
+            userService.createUser(testUser);
+            User findedUser = userService.findByRoleId(
+                    (int) roleService.findByName("Тест").get(0).getId()).get(0);
+            userService.deleteByName("Тест");
+            roleService.deleteByName("Тест");
+            assertEquals(gson.toJson(testUser), gson.toJson(findedUser));
+        } catch (Exception exc){
+            userService.deleteByName("Тест");
+            roleService.deleteByName("Тест");
+        }
+
     }
 
     @Test
     void deleteByName() {
-        roleService.createRole(new Role(1, "Тест"));
-        User testUser = new User("Тест", "Тестовый продукт",
-                (int) roleService.findByName("Тест").get(0).getId());
-        userService.createUser(testUser);
-        userService.deleteByName("Тест");
-        List<User> users = userService.findByName("Тест");
-        User findedUser = new User();
-        if (users.size() != 0){
-            findedUser = users.get(0);
+        try {
+            roleService.createRole(new Role(1, "Тест"));
+            User testUser = new User("Тест", "Тестовый продукт",
+                    (int) roleService.findByName("Тест").get(0).getId());
+            userService.createUser(testUser);
+            userService.deleteByName("Тест");
+            List<User> users = userService.findByName("Тест");
+            User findedUser = new User();
+            if (users.size() != 0){
+                findedUser = users.get(0);
+            }
+            roleService.deleteByName("Тест");
+            assertNotEquals(gson.toJson(testUser), gson.toJson(findedUser));
+        } catch (Exception exc){
+            roleService.deleteByName("Тест");
         }
-        roleService.deleteByName("Тест");
-        assertNotEquals(gson.toJson(testUser), gson.toJson(findedUser));
+
     }
 }

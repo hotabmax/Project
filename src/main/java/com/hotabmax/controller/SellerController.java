@@ -1,19 +1,14 @@
 package com.hotabmax.controller;
 
-import com.hotabmax.filters.FilterAutorizationPage;
-import com.hotabmax.filters.FilterDomenPage;
-import com.hotabmax.filters.FilterLogistPage;
-import com.hotabmax.filters.FilterSellerPage;
-import com.hotabmax.keygenerator.ClassOfKey;
+import com.hotabmax.filters.FilterAutentificationSellerPage;
+import com.hotabmax.controller.keygenerator.ClassOfKey;
 import com.hotabmax.models.*;
-import com.hotabmax.services.HistoryOfSellingService;
-import com.hotabmax.services.ProductService;
-import com.hotabmax.services.SortService;
-import com.hotabmax.services.UserService;
+import com.hotabmax.servicesJPA.HistoryOfSellingService;
+import com.hotabmax.servicesJPA.ProductService;
+import com.hotabmax.servicesJPA.SortService;
 import com.google.gson.Gson;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -26,57 +21,40 @@ import java.util.List;
 
 @Controller
 public class SellerController {
+    private Gson gson = new Gson();
     private Key key;
     private List<User> users = new ArrayList<>();
     private List<Product> products = new ArrayList<>();
     private List<Sort> sorts = new ArrayList<>();
     private List<HistoryOfSelling> historyOfSelling = new ArrayList<>();
-    private Gson gson = new Gson();
-
-    private FilterAutorizationPage filterAutorizationPage;
-    private FilterDomenPage filterDomenPage;
-    private FilterLogistPage filterAdminPage;
-    private FilterSellerPage filterSellerPage;
-    private UserService userService;
-    private ProductService productService;
-    private SortService sortService;
-    private HistoryOfSellingService historyOfSellingService;
-    private ClassOfKey classOfKey;
 
     @Autowired
-    public void setDependencies(
-            @Qualifier("FilterAutorizationPage") FilterAutorizationPage filterAutorizationPage,
-            @Qualifier("FilterDomenPage") FilterDomenPage filterDomenPage,
-            @Qualifier("FilterSallerPage") FilterSellerPage filterSallerPage,
-            @Qualifier("UserService") UserService userService,
-            @Qualifier("ProductService") ProductService productService,
-            @Qualifier("SortService") SortService sortService,
-            @Qualifier("HistoryOfSellingService") HistoryOfSellingService historyOfSellingService,
-            @Qualifier("ClassOfKey") ClassOfKey classOfKey
-    ) {
-        this.filterAutorizationPage = filterAutorizationPage;
-        this.filterDomenPage = filterDomenPage;
-        this.filterSellerPage = filterSallerPage;
-        this.userService = userService;
-        this.productService = productService;
-        this.sortService = sortService;
-        this.historyOfSellingService = historyOfSellingService;
-        this.classOfKey = classOfKey;
-    }
+    private FilterAutentificationSellerPage filterAutentificationSellerPage;
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    private SortService sortService;
+    @Autowired
+    private HistoryOfSellingService historyOfSellingService;
+    @Autowired
+    private ClassOfKey classOfKey;
+
     @Bean
-    public void setKeySaller(){
-        key = classOfKey.setKey();
+    private void getKeySaller(){
+        key = classOfKey.getKey();
     }
 
     @GetMapping("/seller")
     public String getPage(HttpServletRequest httpServletRequest){
-        return filterSellerPage.autentification(httpServletRequest, key);
+        Cookie[] cookies = httpServletRequest.getCookies();
+        return filterAutentificationSellerPage.autentification(cookies, key);
     }
 
     @PostMapping("/seller/getTableSorts")
     @ResponseBody
     public String getAdminTablesSorts(HttpServletRequest httpServletRequest) {
-        if(filterSellerPage.autentification(httpServletRequest, key).equals("seller")){
+        Cookie[] cookies = httpServletRequest.getCookies();
+        if(filterAutentificationSellerPage.autentification(cookies, key).equals("seller")){
             sorts = sortService.findAll();
         }
         return gson.toJson(sorts);
@@ -84,9 +62,10 @@ public class SellerController {
 
     @PostMapping("/seller/getTableProducts")
     @ResponseBody
-    public String getAdminTableProducts(HttpServletRequest httpServletRequest,
+    public String getTableProducts(HttpServletRequest httpServletRequest,
                                                @RequestParam("name") String name) {
-        if(filterSellerPage.autentification(httpServletRequest, key).equals("seller")){
+        Cookie[] cookies = httpServletRequest.getCookies();
+        if(filterAutentificationSellerPage.autentification(cookies, key).equals("seller")){
             products = productService.findByName(name);
         }
         return gson.toJson(products);
@@ -94,9 +73,10 @@ public class SellerController {
 
     @PostMapping("/seller/getTableProductsBySort")
     @ResponseBody
-    public String getAdminTableProductsBySort(HttpServletRequest httpServletRequest,
+    public String getTableProductsBySort(HttpServletRequest httpServletRequest,
                                                @RequestParam("nameSort") String nameSort) {
-        if(filterSellerPage.autentification(httpServletRequest, key).equals("seller")){
+        Cookie[] cookies = httpServletRequest.getCookies();
+        if(filterAutentificationSellerPage.autentification(cookies, key).equals("seller")){
             sorts = sortService.findByName(nameSort);
             int sortid = (int) sorts.get(0).getId();
             products = productService.findBySortId(sortid);
@@ -106,13 +86,14 @@ public class SellerController {
 
     @PostMapping("/seller/tranzactionDeleteProductAmount")
     @ResponseBody
-    public StringBuilder tranzactionDeleteAmount(HttpServletRequest httpServletRequest,
+    public String tranzactionDeleteAmount(HttpServletRequest httpServletRequest,
                                                  @RequestParam("name") String name,
                                                  @RequestParam("amount") int amount){
         Cookie[] cookie = httpServletRequest.getCookies();
         String seller = new String();
-        StringBuilder stringBuilder = new StringBuilder();
-        if(filterSellerPage.autentification(httpServletRequest, key).equals("seller")){
+        String result = new String();
+        Cookie[] cookies = httpServletRequest.getCookies();
+        if(filterAutentificationSellerPage.autentification(cookies, key).equals("seller")){
             productService.tranzactionDeleteAmount(name, amount);
             for(int i = 0; i < cookie.length; i++) {
                 if (cookie[i].getName().equals("JWT")) {
@@ -131,8 +112,7 @@ public class SellerController {
                     name, amount, seller
             ));
         }
-        stringBuilder.append("Оплачен товар " + name + " в количестве - " + amount);
-        System.out.println(stringBuilder);
-        return stringBuilder;
+        result = "Оплачен товар " + name + " в количестве - " + amount;
+        return result;
     }
 }

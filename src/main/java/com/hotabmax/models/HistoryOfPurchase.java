@@ -74,4 +74,5 @@ public class HistoryOfPurchase {
     public String getLogistName(){
         return this.logistname;
     }
+
 }

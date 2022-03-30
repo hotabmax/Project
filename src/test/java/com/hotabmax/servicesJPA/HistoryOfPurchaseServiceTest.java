@@ -17,17 +17,35 @@ class HistoryOfPurchaseServiceTest {
 
     @Test
     void findByDate() {
-        historyOfPurchaseService.createHistoryOfPurchase(new HistoryOfPurchase("Тест", 1, "Программа"));
-        assertEquals("Программа",
-                historyOfPurchaseService.findByDate(
-                        new SimpleDateFormat("yyyy.MM.dd").format(new Date())).get(0).getLogistName());
-        historyOfPurchaseService.deleteByDate(new SimpleDateFormat("yyyy.MM.dd").format(new Date()));
+        try {
+            historyOfPurchaseService.createHistoryOfPurchase(
+                    new HistoryOfPurchase("Тест", 1, "Программа"));
+            assertEquals("Программа",
+                    historyOfPurchaseService.findByDate(
+                            new SimpleDateFormat("yyyy.MM.dd").format(
+                                    new Date())).get(0).getLogistName());
+            historyOfPurchaseService.deleteByDate(
+                    new SimpleDateFormat("yyyy.MM.dd").format(new Date()));
+        } catch (Exception exc){
+            historyOfPurchaseService.deleteByDate(
+                    new SimpleDateFormat("yyyy.MM.dd").format(new Date()));
+        }
+
     }
 
     @Test
     void deleteByDate() {
-        historyOfPurchaseService.createHistoryOfPurchase(new HistoryOfPurchase("Тест", 1, "Программа"));
-        historyOfPurchaseService.deleteByDate(new SimpleDateFormat("yyyy.MM.dd").format(new Date()));
-        assertEquals(0, historyOfPurchaseService.findByDate(new SimpleDateFormat("yyyy.MM.dd").format(new Date())).size());
+        try {
+            historyOfPurchaseService.createHistoryOfPurchase(
+                    new HistoryOfPurchase("Тест", 1, "Программа"));
+            historyOfPurchaseService.deleteByDate(
+                    new SimpleDateFormat("yyyy.MM.dd").format(new Date()));
+            assertEquals(0, historyOfPurchaseService.findByDate(
+                    new SimpleDateFormat("yyyy.MM.dd").format(new Date())).size());
+        } catch (Exception exc){
+            historyOfPurchaseService.deleteByDate(
+                    new SimpleDateFormat("yyyy.MM.dd").format(new Date()));
+        }
+
     }
 }

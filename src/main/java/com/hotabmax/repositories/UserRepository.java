@@ -4,6 +4,7 @@ import com.hotabmax.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -20,7 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return List of user object who contain id, name, password, role. If this
      * user not found then List not consist object and metod size() retern 0.
      */
-    @Query(value = "select id, name, password, roleid from userdata where name like %:name%",
+    @Query(value = "select id, name, password, roleid from userdata where name = :name",
             nativeQuery = true)
     List<User> findByName(String name);
 
@@ -34,7 +35,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     @Modifying
     @Transactional
-    @Query(value = "delete from userdata where name like %:name%",
+    @Query(value = "delete from userdata where name = :name",
             nativeQuery = true)
     void deleteByName(String name);
 
