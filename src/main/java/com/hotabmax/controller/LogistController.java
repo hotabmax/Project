@@ -15,9 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +46,7 @@ public class LogistController {
     private ClassOfKey classOfKey;
 
     @Bean
-    private void getKeyLogist(){
+    private void getKeyLogist() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
         key = classOfKey.getKey();
     }
 

@@ -14,10 +14,13 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -54,7 +57,7 @@ public class AdminController {
     private ClassOfKey classOfKey;
 
     @Bean
-    private void getKeyAdmin(){
+    private void getKeyAdmin() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
         key = classOfKey.getKey();
     }
 

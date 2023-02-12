@@ -10,8 +10,8 @@ import javax.crypto.NoSuchPaddingException;
 import java.security.*;
 
 @Service
-@Component("ClassOfKeys")
-public class ClassOfKeys {
+@Component("ClassOfKey")
+public class ClassOfKey {
     private Key key;
     private KeyPair keyPair;
 
