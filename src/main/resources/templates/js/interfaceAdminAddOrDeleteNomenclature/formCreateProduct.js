@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
-import {Form, Button} from "react-bootstrap"
+import {Form} from "react-bootstrap"
+import {Box, Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@material-ui/core"
 import axios from "axios";
 export function FormCreateProduct({setTableData}){
     const {register, handleSubmit} = useForm()
-    const [arrayOptions, setArrayOptions] = useState(['-'])
+    const [arrayOptions, setArrayOptions] = useState([' '])
     function submit(data){
         axios.post('http://localhost:8100/admin/getTableSorts')
             .then(res=>{
@@ -20,7 +21,8 @@ export function FormCreateProduct({setTableData}){
                     })
             })
     }
-    function loadOptions(){
+
+    useEffect(() => {
         axios.post('http://localhost:8100/admin/getTableSorts')
             .then(res => {
                 if (res.data){
@@ -31,55 +33,77 @@ export function FormCreateProduct({setTableData}){
                     setArrayOptions(arrayNames)
                 }
             })
-    }
+    }, []);
+
     return <Form onSubmit={handleSubmit(submit)}>
         <Form.Group>
-            <Form.Control
+            <TextField
+                style={{marginTop:'10px'}}
+                label="Название"
+                variant="outlined"
                 type='string'
-                placeholder="Название"
-                {...register('name')} />
+                {...register('name')}
+            ></TextField>
         </Form.Group>
         <Form.Group>
-            <Form.Control
+            <TextField
+                style={{marginTop:'10px'}}
+                label="Код"
+                variant="outlined"
                 type='number'
-                placeholder="Код"
-                {...register('code')} />
+                {...register('code')}
+            ></TextField>
         </Form.Group>
         <Form.Group>
-            <Form.Control
+            <TextField
+                style={{marginTop:'10px'}}
+                label="Количество"
+                variant="outlined"
                 type='number'
-                placeholder="Количество"
-                {...register('amount')} />
+                {...register('amount')}
+            ></TextField>
         </Form.Group>
         <Form.Group>
-            <Form.Control
+            <TextField
+                style={{marginTop:'10px'}}
+                label="Цена закупки"
+                variant="outlined"
                 type='number'
-                placeholder="Цена закупки"
-                {...register('purchaseprice')} />
+                {...register('purchaseprice')}
+            ></TextField>
         </Form.Group>
         <Form.Group>
-            <Form.Control
+            <TextField
+                style={{marginTop:'10px'}}
+                label="Цена продажи"
+                variant="outlined"
                 type='number'
-                placeholder="Цена продажи"
-                {...register('sellingprice')} />
+                {...register('sellingprice')}
+            ></TextField>
         </Form.Group>
         <Form.Group>
-            <Form.Control
+            <TextField
+                style={{marginTop:'10px'}}
+                label="Описание"
+                variant="outlined"
                 type='string'
-                placeholder="Описание"
-                {...register('description')} />
+                {...register('description')}
+            ></TextField>
         </Form.Group>
         <Form.Group>
-            <Form.Select
-                type='number'
-                style={{border: '0px', backgroundColor: 'white',
-                    margin: '3px', marginLeft:'9px'}}
-                {...register('sortid')}
-                onClick={loadOptions} >
-                {arrayOptions.map((option) => <option>{option}</option>)}
-            </Form.Select>
+            <Box>
+                <FormControl variant="outlined" style={{marginTop:'10px', minWidth: '150px'}}>
+                    <InputLabel>Вид продукта</InputLabel>
+                    <Select
+                        label="Вид продукта"
+                        {...register('sortid')}
+                    >
+                        {arrayOptions.map((option) => <MenuItem value={option}>{option}</MenuItem>)}
+                    </Select>
+                </FormControl>
+            </Box>
         </Form.Group>
-        <Button variant="light" type="submit">
+        <Button style={{marginTop:'10px'}} variant="outlined" type="submit">
             Добавить продукт
         </Button>
     </Form>;

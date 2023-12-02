@@ -28,8 +28,7 @@ module.exports = {
             }
         ]
     },
-    watchOptions: {
-        aggregateTimeout: 500,
-        poll: 1000
-    },
+    devServer:{
+        port:8100
+    }
 }

@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {useForm} from "react-hook-form";
-import {Form, Button} from "react-bootstrap"
+import {Form} from "react-bootstrap"
+import {Box, Button, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core"
 import axios from "axios";
 export function FormGetHistoryOfSelling({setTableData}){
     const {register, handleSubmit} = useForm()
@@ -20,36 +21,45 @@ export function FormGetHistoryOfSelling({setTableData}){
     }
     return <Form onSubmit={handleSubmit(submit)}>
         <Form.Group>
-            <Form.Label style={{margin: '3px', marginLeft:'9px'}}>
-                Год
-            </Form.Label>
-            <Form.Select
-                style={{border: '0px', backgroundColor: 'white'}}
-                {...register('year')}>
-                {arrayOptionsYears.map((option) => <option>{option}</option>)}
-            </Form.Select>
+            <Box>
+                <FormControl variant="outlined" style={{marginTop:'10px', minWidth: '150px'}}>
+                    <InputLabel>Год</InputLabel>
+                    <Select
+                        label="Год"
+                        {...register('year')}
+                    >
+                        {arrayOptionsYears.map((option) => <MenuItem value={option}>{option}</MenuItem>)}
+                    </Select>
+                </FormControl>
+            </Box>
         </Form.Group>
         <Form.Group>
-            <Form.Label style={{margin: '3px', marginLeft:'9px'}}>
-                Месяц
-            </Form.Label>
-            <Form.Select
-                style={{border: '0px', backgroundColor: 'white'}}
-                {...register('month')}>
-                {arrayOptionsMonths.map((option) => <option>{option}</option>)}
-            </Form.Select>
+            <Box>
+                <FormControl variant="outlined" style={{marginTop:'10px', minWidth: '150px'}}>
+                    <InputLabel>Месяц</InputLabel>
+                    <Select
+                        label="Месяц"
+                        {...register('month')}
+                    >
+                        {arrayOptionsMonths.map((option) => <MenuItem value={option}>{option}</MenuItem>)}
+                    </Select>
+                </FormControl>
+            </Box>
         </Form.Group>
         <Form.Group>
-            <Form.Label style={{margin: '3px', marginLeft:'9px'}}>
-                День
-            </Form.Label>
-            <Form.Select
-                style={{border: '0px', backgroundColor: 'white'}}
-                {...register('day')}>
-                {arrayOptionsDays.map((option) => <option>{option}</option>)}
-            </Form.Select>
+            <Box>
+                <FormControl variant="outlined" style={{marginTop:'10px', minWidth: '150px'}}>
+                    <InputLabel>День</InputLabel>
+                    <Select
+                        label="День"
+                        {...register('day')}
+                    >
+                        {arrayOptionsDays.map((option) => <MenuItem value={option}>{option}</MenuItem>)}
+                    </Select>
+                </FormControl>
+            </Box>
         </Form.Group>
-        <Button variant="light" type="submit">
+        <Button style={{marginTop:'10px'}} variant="outlined" type="submit">
             Показать продажи
         </Button>
     </Form>;

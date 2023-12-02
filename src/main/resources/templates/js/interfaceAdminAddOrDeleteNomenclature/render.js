@@ -12,7 +12,8 @@ ReactDOM.render(
     document.getElementById('menubar')
 )
 function DisplayAndTable(){
-    const [tableData, setTableData] = useState([{name: "-", code: "-", amount: "-",
+    const [tableData, setTableData] =
+        useState([{name: "-", code: "-", amount: "-",
         purchaseprice: "-", sellingprice: "-", description: "-"}])
     return <AlertContext.Provider value={tableData}>
         <Displaybar setTableData={setTableData}/>
@@ -23,7 +24,4 @@ ReactDOM.render(
     <DisplayAndTable/>,
     document.getElementById('displaybar')
 )
-/*ReactDOM.render(
-    <CustomTable/>,
-    document.getElementById('databar')
-)*/
+

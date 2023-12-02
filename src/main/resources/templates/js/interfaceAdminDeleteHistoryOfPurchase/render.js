@@ -19,6 +19,7 @@ function DisplayAndTable(){
         <CustomTableHistoryOfPurchase/>
     </AlertContext.Provider>
 }
+
 ReactDOM.render(
     <DisplayAndTable/>,
     document.getElementById('displaybar')

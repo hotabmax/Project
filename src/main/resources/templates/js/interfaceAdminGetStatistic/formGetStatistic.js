@@ -1,10 +1,11 @@
 import React, {useState} from "react";
 import {useForm} from "react-hook-form";
-import {Form, Button} from "react-bootstrap"
+import {Form} from "react-bootstrap"
+import {Box, Button, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core"
 import axios from "axios";
 export function FormGetStatistic(){
     const {register, handleSubmit} = useForm()
-    const [textResult, setTextResult] = useState(['-'])
+    const [textResult, setTextResult] = useState([' '])
     var arrayOptionsYears = ['2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030',
         '2031', '2032', '2033', '2034', '2035', '2036', '2037', '2038', '2039', '2040']
     var arrayOptionsMonths = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
@@ -18,31 +19,37 @@ export function FormGetStatistic(){
     }
     return <Form onSubmit={handleSubmit(submit)}>
         <Form.Group>
-            <Form.Label style={{margin: '3px', marginLeft:'9px'}}>
-                Год
-            </Form.Label>
-            <Form.Select
-                style={{border: '0px', backgroundColor: 'white'}}
-                {...register('year')}>
-                {arrayOptionsYears.map((option) => <option>{option}</option>)}
-            </Form.Select>
+            <Box>
+                <FormControl variant="outlined" style={{marginTop:'10px', minWidth: '150px'}}>
+                    <InputLabel>Год</InputLabel>
+                    <Select
+                        label="Год"
+                        {...register('year')}
+                    >
+                        {arrayOptionsYears.map((option) => <MenuItem value={option}>{option}</MenuItem>)}
+                    </Select>
+                </FormControl>
+            </Box>
         </Form.Group>
         <Form.Group>
-            <Form.Label style={{margin: '3px', marginLeft:'9px'}}>
-                Месяц
-            </Form.Label>
-            <Form.Select
-                style={{border: '0px', backgroundColor: 'white'}}
-                {...register('month')}>
-                {arrayOptionsMonths.map((option) => <option>{option}</option>)}
-            </Form.Select>
+            <Box>
+                <FormControl variant="outlined" style={{marginTop:'10px', minWidth: '150px'}}>
+                    <InputLabel>Месяц</InputLabel>
+                    <Select
+                        label="Месяй"
+                        {...register('month')}
+                    >
+                        {arrayOptionsMonths.map((option) => <MenuItem value={option}>{option}</MenuItem>)}
+                    </Select>
+                </FormControl>
+            </Box>
         </Form.Group>
         <Form.Group>
             <Form.Text style={{margin: '3px', marginLeft:'9px'}}>
                 {textResult.map((text) => <div>{text}</div>)}
             </Form.Text>
         </Form.Group>
-        <Button variant="light" type="submit">
+        <Button style={{marginTop:'10px'}} variant="outlined" type="submit">
             Показать продажи
         </Button>
 

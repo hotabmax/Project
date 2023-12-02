@@ -97,25 +97,29 @@ public class SellerController {
         String result = new String();
         Cookie[] cookies = httpServletRequest.getCookies();
         if(filterAutentificationSellerPage.autentification(cookies, key).equals("seller")){
-            productService.tranzactionDeleteAmount(name, amount);
-            for(int i = 0; i < cookie.length; i++) {
-                if (cookie[i].getName().equals("JWT")) {
-                    String jws = cookie[i].getValue();
-                    String sources = Jwts.parserBuilder()
-                            .setSigningKey(key)
-                            .build()
-                            .parseClaimsJws(jws)
-                            .getBody()
-                            .getSubject();
-                    String[] values = sources.split("\\s+");
-                    seller = values[0];
+            if (productService.findByName(name).get(0).getAmount() >= amount){
+                productService.tranzactionDeleteAmount(name, amount);
+                for(int i = 0; i < cookie.length; i++) {
+                    if (cookie[i].getName().equals("JWT")) {
+                        String jws = cookie[i].getValue();
+                        String sources = Jwts.parserBuilder()
+                                .setSigningKey(key)
+                                .build()
+                                .parseClaimsJws(jws)
+                                .getBody()
+                                .getSubject();
+                        String[] values = sources.split("\\s+");
+                        seller = values[0];
+                    }
                 }
+                historyOfSellingService.createHistoryOfSelling(new HistoryOfSelling(
+                        name, amount, seller
+                ));
+                result = "Оплачен товар " + name + " в количестве - " + amount;
+            } else {
+                result = "К сожалению, на складе не осталось товара";
             }
-            historyOfSellingService.createHistoryOfSelling(new HistoryOfSelling(
-                    name, amount, seller
-            ));
         }
-        result = "Оплачен товар " + name + " в количестве - " + amount;
         return result;
     }
 }

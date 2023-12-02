@@ -1,6 +1,7 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
-import {Form, Button} from "react-bootstrap"
+import {Form} from "react-bootstrap"
+import {Box, Button, FormControl, InputLabel, MenuItem, Select} from "@material-ui/core"
 import axios from "axios";
 export function FormGetProducts({setTableData}){
     const {register, handleSubmit} = useForm()
@@ -11,7 +12,7 @@ export function FormGetProducts({setTableData}){
                 setTableData(res.data)
             })
     }
-    function loadOptions(){
+    useEffect(() => {
         axios.post('http://localhost:8100/admin/getTableSorts')
             .then(res => {
                 if (res.data){
@@ -22,18 +23,22 @@ export function FormGetProducts({setTableData}){
                     setArrayOptions(arrayNames)
                 }
             })
-    }
+    }, []);
     return <Form onSubmit={handleSubmit(submit)}>
         <Form.Group>
-            <Form.Select
-                style={{border: '0px', backgroundColor: 'white',
-                    margin: '3px', marginLeft:'9px'}}
-                {...register('name')}
-                onClick={loadOptions}>
-                {arrayOptions.map((option) => <option>{option}</option>)}
-            </Form.Select>
+            <Box>
+                <FormControl variant="outlined" style={{marginTop:'10px', minWidth: '150px'}}>
+                    <InputLabel>Вид продукта</InputLabel>
+                    <Select
+                        label="Вид продукта"
+                        {...register('name')}
+                    >
+                        {arrayOptions.map((option) => <MenuItem value={option}>{option}</MenuItem>)}
+                    </Select>
+                </FormControl>
+            </Box>
         </Form.Group>
-        <Button variant="light" type="submit">
+        <Button style={{marginTop:'10px'}} variant="outlined" type="submit">
             Показать продукты
         </Button>
     </Form>;

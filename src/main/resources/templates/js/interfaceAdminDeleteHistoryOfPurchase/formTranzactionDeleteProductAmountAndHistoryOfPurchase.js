@@ -1,11 +1,12 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
-import {Form, Button} from "react-bootstrap"
+import {Form} from "react-bootstrap"
+import {Box, Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@material-ui/core"
 import axios from "axios";
 export function FormTranzactionDeleteProductAmountAndHistoryOfPurchase(){
     const {register, handleSubmit} = useForm()
-    const [arrayOptionsSort, setArrayOptionsSort] = useState(['-'])
-    const [arrayOptionsProduct, setArrayOptionsProduct] = useState(['-'])
+    const [arrayOptionsSort, setArrayOptionsSort] = useState([' '])
+    const [arrayOptionsProduct, setArrayOptionsProduct] = useState([' '])
     let text = "На складе осталось всего:"
     const [textWarningAmount, setTextWarningAmount] = useState()
     let text1 = "Выберите продукцию"
@@ -29,16 +30,6 @@ export function FormTranzactionDeleteProductAmountAndHistoryOfPurchase(){
 
     }
     function loadOptions(event){
-        axios.post('http://localhost:8100/admin/getTableSorts')
-            .then(res => {
-                if (res.data){
-                    let arrayNames = [];
-                    for(let i = 0; i < res.data.length; i++){
-                        arrayNames[i] = res.data[i].name
-                    }
-                    setArrayOptionsSort(arrayNames)
-                }
-            })
         const request = {
             name: event.target.value
         }
@@ -53,28 +44,55 @@ export function FormTranzactionDeleteProductAmountAndHistoryOfPurchase(){
                 }
             })
     }
+
+    useEffect(() => {
+        axios.post('http://localhost:8100/admin/getTableSorts')
+            .then(res => {
+                if (res.data){
+                    let arrayNames = [];
+                    for(let i = 0; i < res.data.length; i++){
+                        arrayNames[i] = res.data[i].name
+                    }
+                    setArrayOptionsSort(arrayNames)
+                }
+            })
+    }, []);
+
     return <Form onSubmit={handleSubmit(submit)}>
         <Form.Group>
-            <Form.Select
-                style={{border: '0px', backgroundColor: 'white',
-                    margin: '3px', marginLeft:'9px'}}
-                onClick={loadOptions}>
-                {arrayOptionsSort.map((option) => <option>{option}</option>)}
-            </Form.Select>
+            <Box>
+                <FormControl variant="outlined" style={{marginTop:'10px', minWidth: '150px'}}>
+                    <InputLabel>Вид товара</InputLabel>
+                    <Select
+                        label="Вид товара"
+                        onClick={loadOptions}
+                    >
+                        {arrayOptionsSort.map((option) => <MenuItem value={option}>{option}</MenuItem>)}
+                    </Select>
+                </FormControl>
+            </Box>
         </Form.Group>
         <Form.Group>
-            <Form.Select
-                style={{border: '0px', backgroundColor: 'white',
-                    margin: '3px', marginLeft:'9px'}}
-                {...register('name')}>
-                {arrayOptionsProduct.map((option) => <option>{option}</option>)}
-            </Form.Select>
+            <Box>
+                <FormControl variant="outlined" style={{marginTop:'10px', minWidth: '150px'}}>
+                    <InputLabel>Вид товара</InputLabel>
+                    <Select
+                        label="Вид товара"
+                        {...register('name')}
+                    >
+                        {arrayOptionsProduct.map((option) => <MenuItem value={option}>{option}</MenuItem>)}
+                    </Select>
+                </FormControl>
+            </Box>
         </Form.Group>
         <Form.Group>
-            <Form.Control
-                type="text"
-                placeholder="Количество"
-                {...register('amount')} />
+            <TextField
+                style={{marginTop:'10px'}}
+                label="Количество"
+                variant="outlined"
+                type='string'
+                {...register('amount')}
+            ></TextField>
             <Form.Label>
                 {textWarningAmount} {amountProduct}
             </Form.Label>
@@ -82,7 +100,7 @@ export function FormTranzactionDeleteProductAmountAndHistoryOfPurchase(){
                 {textWarningSelect}
             </Form.Label>
         </Form.Group>
-        <Button variant="light" type="submit">
+        <Button style={{marginTop:'10px'}} variant="outlined" type="submit">
             Списать товар со склада
         </Button>
     </Form>;

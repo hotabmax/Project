@@ -1,6 +1,7 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
-import {Form, Button} from "react-bootstrap"
+import {Form} from "react-bootstrap"
+import {Box, Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@material-ui/core"
 import axios from "axios";
 export function FormAddUser({setTableData}){
     const {register, handleSubmit} = useForm()
@@ -19,7 +20,8 @@ export function FormAddUser({setTableData}){
                     })
             })
     }
-    function loadOptions(){
+
+    useEffect(() => {
         axios.post('http://localhost:8100/admin/getTableRoles')
             .then(res => {
                 if (res.data){
@@ -30,30 +32,41 @@ export function FormAddUser({setTableData}){
                     setArrayOptions(arrayNames)
                 }
             })
-    }
+    }, []);
+
     return <Form onSubmit={handleSubmit(submit)}>
         <Form.Group>
-            <Form.Control
-                type="text"
-                placeholder="Логин"
-                {...register('name')} />
+            <TextField
+                style={{marginTop:'10px'}}
+                label="Логин"
+                variant="outlined"
+                type='string'
+                {...register('name')}
+            ></TextField>
         </Form.Group>
         <Form.Group>
-            <Form.Control
-                type="text"
-                placeholder="Пароль"
-                {...register('password')} />
+            <TextField
+                style={{marginTop:'10px'}}
+                label="Пароль"
+                variant="outlined"
+                type='string'
+                {...register('password')}
+            ></TextField>
         </Form.Group>
         <Form.Group>
-            <Form.Select
-                style={{border: '0px', backgroundColor: 'white',
-                    margin: '3px', marginLeft:'9px'}}
-                {...register('roleid')}
-                onClick={loadOptions}>
-                {arrayOptions.map((option) => <option>{option}</option>)}
-            </Form.Select>
+            <Box>
+                <FormControl variant="outlined" style={{marginTop:'10px', minWidth: '150px'}}>
+                    <InputLabel>Роль</InputLabel>
+                    <Select
+                        label="Роль"
+                        {...register('roleid')}
+                    >
+                        {arrayOptions.map((option) => <MenuItem value={option}>{option}</MenuItem>)}
+                    </Select>
+                </FormControl>
+            </Box>
         </Form.Group>
-        <Button variant="light" type="submit">
+        <Button style={{marginTop:'10px'}} variant="outlined" type="submit">
             Добавить пользователя
         </Button>
     </Form>;

@@ -7,9 +7,9 @@ export function Menubar(){
         <Container>
             <Nav>
                 <Nav.Link href="/admin">Пользователи</Nav.Link>
+                <Nav.Link href="/adminAddOrDeleteNomenclature">Номенклатура</Nav.Link>
                 <Nav.Link href="/adminDeleteHistoryOfPurchase">История закупок</Nav.Link>
                 <Nav.Link href="/adminDeleteHistoryOfSelling">История продаж</Nav.Link>
-                <Nav.Link href="/adminAddOrDeleteNomenclature">Номенклатура</Nav.Link>
                 <Nav.Link href="/adminGetStatistic">Статистика</Nav.Link>
                 <Nav.Link href="/exit">Выход</Nav.Link>
             </Nav>

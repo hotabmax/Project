@@ -4,7 +4,7 @@ import {AlertContext} from "./render";
 export function CustomTableProducts(){
     const tableData = useContext(AlertContext)
 
-    return <Table striped bordered>
+    return <Table style={{marginTop:'10px', width: '96%'}} striped bordered>
         <thead>
         <tr>
             <th>Название</th>
